@@ -1,61 +1,86 @@
-# LandTrack PK
+# 🚀 LandTrack PK
 
-LandTrack PK is a comprehensive land record management system designed for Pakistan. It provides a secure and transparent digital platform for citizens to manage their properties and for land officers to oversee land operations efficiently.
+**Author:** Abdul Rehman
 
-## Features
+LandTrack PK is a comprehensive land record management system designed for Pakistan.  
+It provides a secure and transparent digital platform for citizens to manage their properties and for land officers to efficiently oversee land operations.
 
-* **Role-Based Access:** Dedicated interfaces for Citizens and Land Officers.
-* **Property Management:** Citizens can view their land ownership details and obtain a digital *Fard* (Land Record Document).
-* **Transfer Requests:** Securely initiate and approve property ownership transfers between citizens.
-* **Dispute Resolution:** Citizens can file land disputes which are tracked and managed by officers.
-* **Service Booking:** Book in-person appointments at local service centers.
-* **Complaints System:** File and track complaints with a built-in comment system.
+---
 
-## Technology Stack
+## ✨ Features
 
-* **Frontend:** Flutter (Mobile/Web)
-* **Backend:** Python with Flask
-* **Database:** Microsoft SQL Server
+- 🔐 Role-Based Access (Citizens & Land Officers)
+- 🏠 Property Management (View ownership details & digital Fard)
+- 🔄 Transfer Requests (Secure property ownership transfers)
+- ⚖️ Dispute Resolution (File and track land disputes)
+- 📅 Service Booking (Appointment scheduling system)
+- 📝 Complaints System (With tracking and comments)
 
-## Project Structure
+---
 
-* `/landtrackpk_frontend/` - Contains the Flutter application.
-* `/landtrackpk_backend/` - Contains the Flask API backend.
-* `landtrackpk.sql` - The SQL script to initialize the database schema, stored procedures, triggers, and sample data.
+## 🛠️ Technology Stack
 
-## Setup Instructions
+- **Frontend:** Flutter (Mobile & Web)
+- **Backend:** Python (Flask)
+- **Database:** Microsoft SQL Server
 
-### 1. Database Setup
-1. Open **SQL Server Management Studio (SSMS)**.
-2. Open the `landtrackpk.sql` file and click **Execute**. 
-> **Important:** Only run this script **once** to set up the database. Running it again will completely wipe all your saved data and reset the database back to the default sample records. To view your data, use a `SELECT` query instead.
+---
 
-### 2. Backend Setup
-1. Open a terminal and navigate to the backend directory:
-   ```bash
-   cd landtrackpk_backend
-   ```
-2. Install dependencies (e.g., `flask`, `pyodbc`, `flask-cors`):
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Run the backend server:
-   ```bash
-   python app.py
-   ```
-   *The server will start on `http://localhost:5000`.*
+## 📁 Project Structure
 
-### 3. Frontend Setup
-1. Open a terminal and navigate to the frontend directory:
-   ```bash
-   cd landtrackpk_frontend
-   ```
-2. Retrieve packages:
-   ```bash
-   flutter pub get
-   ```
-3. Run the application:
-   ```bash
-   flutter run
-   ```
-   *Note: If you are running the app on a physical mobile device, make sure to update the `_mobileBaseUrl` in `lib/constants.dart` to match your computer's local Wi-Fi IP address (e.g., `192.168.x.x`).*
+/landtrackpk_frontend/ → Flutter application  
+/landtrackpk_backend/ → Flask API backend  
+landtrackpk.sql → Database schema, stored procedures, triggers & sample data  
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Database Setup
+- Open **SQL Server Management Studio (SSMS)**
+- Run `landtrackpk.sql`
+- ⚠️ Run only once (re-running will reset database)
+
+---
+
+### 2️⃣ Backend Setup
+
+cd landtrackpk_backend  
+pip install -r requirements.txt  
+python app.py  
+
+Backend runs at:  
+http://localhost:5000  
+
+---
+
+### 3️⃣ Frontend Setup
+
+cd landtrackpk_frontend  
+flutter pub get  
+flutter run  
+
+If using a physical device:  
+Update `_mobileBaseUrl` in  
+lib/constants.dart  
+
+Use your system IP:  
+192.168.x.x  
+
+---
+
+## 🎯 Project Goal
+
+The goal of this project is to modernize land record systems by making them:
+
+- Transparent  
+- Secure  
+- Digitally accessible  
+- Efficient for citizens and land officers  
+
+---
+
+## 👨‍💻 Author
+
+Abdul Rehman  
+Built with ❤️ using Flutter + Flask + SQL Server

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Citizen Dashboard - LandTrackPK</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .guilloche-pattern {
+            background-image: radial-gradient(#01411c 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+            opacity: 0.05;
+        }
+
+        .urdu-font {
+            font-family: 'Noto Nastaliq Urdu', serif;
+        }
+
+        .stamp-effect {
+            border: 2px solid currentColor;
+            padding: 2px 8px;
+            text-transform: uppercase;
+            font-weight: 800;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        .news-ticker-animation {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 30s linear infinite;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#c9a84c",
+                        "secondary-container": "#dfe0e0",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#616363",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#01411c",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1b1b",
+                        "on-primary-fixed-variant": "#17512a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed": "#ffe08f",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#503d00",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "outline": "#717970",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c0c9be",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-tint": "#326a40",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary-container": "#74ae7e",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#99d5a2",
+                        "secondary": "#5d5f5f",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f1bc",
+                        "primary": "#00290f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#414941",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "edge-margin": "20px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-sm": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen pb-24">
+<!-- Top App Bar -->
+<header class="bg-surface sticky top-0 z-50 flex justify-between items-center w-full px-edge-margin h-16 border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="account_balance">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 rounded-full hover:bg-surface-container-low transition-opacity duration-150 active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<img alt="User Avatar" class="w-10 h-10 rounded-full border border-primary-container" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+</div>
+</header>
+<main class="max-w-screen-md mx-auto px-edge-margin pt-md">
+<!-- User Profile Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md mb-xl shadow-sm relative overflow-hidden">
+<div class="guilloche-pattern absolute inset-0 pointer-events-none"></div>
+<div class="flex items-start justify-between relative z-10">
+<div class="flex gap-md">
+<img alt="Muhammad Ali" class="w-16 h-16 rounded-lg border-2 border-primary-container shadow-sm" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-primary">Muhammad Ali</h2>
+<div class="flex items-center gap-xs mt-1">
+<span class="material-symbols-outlined text-tertiary-container text-[18px]" data-icon="verified" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-wider">CNIC Verified</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<div class="stamp-effect text-tertiary border-tertiary text-[10px]">Active Citizen</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-2">ID: PK-88219-01</p>
+</div>
+</div>
+</section>
+<!-- Hero Section / Map Banner -->
+<section class="relative h-48 rounded-xl overflow-hidden mb-xl border border-outline-variant shadow-lg">
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg')"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent flex flex-col justify-center px-lg">
+<h3 class="font-display-lg text-display-lg text-on-primary">Pakistan Land Records</h3>
+<p class="font-body-lg text-on-primary opacity-90 max-w-[240px]">Access, verify, and transfer land titles with state-level security.</p>
+</div>
+<!-- Decorative Seal -->
+<div class="absolute bottom-4 right-4 w-16 h-16 opacity-20 invert">
+<span class="material-symbols-outlined text-[64px]" data-icon="account_balance">account_balance</span>
+</div>
+</section>
+<!-- Services Grid -->
+<section class="mb-xl">
+<div class="flex justify-between items-end mb-md px-1">
+<h4 class="font-headline-sm text-headline-sm text-primary">Digital Services</h4>
+<p class="font-label-sm text-label-sm text-tertiary urdu-font">ڈیجیٹل خدمات</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-md">
+<!-- Tile 1: Book Appointment -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="event">event</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Book Appointment</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">اپوائنٹمنٹ بک کریں</span>
+</button>
+<!-- Tile 2: File Complaint -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="report">report</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">File Complaint</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">شکایت درج کریں</span>
+</button>
+<!-- Tile 3: View Fard -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="description">description</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">View Fard</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">فرد دیکھیں</span>
+</button>
+<!-- Tile 4: Dispute -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="gavel">gavel</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Land Dispute</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">زمینی تنازعہ</span>
+</button>
+<!-- Tile 5: Transfer Request -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="move_up">move_up</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Transfer Request</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">انتقال کی درخواست</span>
+</button>
+<!-- Tile 6: Service History -->
+<button class="flex flex-col items-center justify-center p-lg bg-surface-container-low border border-outline-variant rounded-xl hover:bg-secondary-container transition-all group relative overflow-hidden">
+<div class="shimmer absolute inset-0 pointer-events-none opacity-20"></div>
+<span class="material-symbols-outlined text-primary text-[32px] mb-sm group-hover:scale-110 transition-transform" data-icon="history">history</span>
+<span class="font-label-bold text-label-bold text-on-surface text-center">Service History</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant urdu-font mt-1">تاریخچہ دیکھیں</span>
+</button>
+</div>
+</section>
+<!-- Recent Activity (Supplementary) -->
+<section class="mb-xl">
+<h4 class="font-headline-sm text-headline-sm text-primary mb-md">Recent Documents</h4>
+<div class="space-y-sm">
+<div class="flex items-center gap-md p-md bg-white border-l-4 border-tertiary-container border-y border-r border-outline-variant rounded-r-lg">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary" data-icon="content_paste_search">content_paste_search</span>
+</div>
+<div class="flex-grow">
+<p class="font-label-bold text-label-bold text-on-background">Digital Fard - Khewat 204</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Generated on 24 Oct, 2023</p>
+</div>
+<span class="font-label-bold text-tertiary text-[10px] uppercase border border-tertiary px-2 py-1 rounded">Verified</span>
+</div>
+</div>
+</section>
+</main>
+<!-- News Ticker -->
+<div class="fixed bottom-[72px] left-0 w-full bg-primary text-on-primary h-8 flex items-center overflow-hidden z-40 border-y border-primary-container">
+<div class="bg-tertiary-container text-on-tertiary-fixed px-md h-full flex items-center font-label-bold text-[10px] z-10 whitespace-nowrap">LATEST UPDATES</div>
+<div class="news-ticker-animation flex gap-xl items-center">
+<span class="font-label-sm text-label-sm opacity-90">• Punjab Land Record Authority introduces biometric verification for all transfers.</span>
+<span class="font-label-sm text-label-sm urdu-font opacity-90">• پنجاب لینڈ ریکارڈ اتھارٹی نے تمام تبادلوں کے لیے بائیو میٹرک تصدیق متعارف کروا دی ہے۔</span>
+<span class="font-label-sm text-label-sm opacity-90">• Digital Girdawari system now active in Rawalpindi District.</span>
+<span class="font-label-sm text-label-sm urdu-font opacity-90">• راولپنڈی ضلع میں ڈیجیٹل گرداوری سسٹم اب فعال ہے۔</span>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-lg py-sm pb-safe bg-surface-container border-t border-outline-variant shadow-md">
+<!-- Records (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-sm text-label-sm">Records</span>
+</a>
+<!-- Map (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</a>
+<!-- Verify (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="font-label-sm text-label-sm">Verify</span>
+</a>
+<!-- Profile (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:w-1 after:h-1 after:bg-tertiary-container after:rounded-full after:mt-1 hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for service tiles
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simulate page loading completion for shimmer effect removal after 2s
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.shimmer').forEach(el => {
+                    el.style.opacity = '0';
+                    el.style.transition = 'opacity 0.5s ease';
+                });
+            }, 2000);
+        });
+    </script>
+</body></html>

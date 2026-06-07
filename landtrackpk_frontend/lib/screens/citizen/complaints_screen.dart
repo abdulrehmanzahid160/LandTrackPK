@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import 'complaint_details_screen.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/bilingual_label.dart';
+import '../../widgets/stamp_badge.dart';
 
 class ComplaintsScreen extends StatefulWidget {
   final int citizenId;
   final String citizenName;
-  const ComplaintsScreen(
-      {super.key, required this.citizenId, required this.citizenName});
+  const ComplaintsScreen({super.key, required this.citizenId, required this.citizenName});
 
   @override
   State<ComplaintsScreen> createState() => _ComplaintsScreenState();
@@ -28,8 +30,7 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
       final result = await ApiService.getComplaints(widget.citizenId);
       if (mounted && result['success'] == true) {
         setState(() {
-          _complaints =
-              List<Map<String, dynamic>>.from(result['complaints'] ?? []);
+          _complaints = List<Map<String, dynamic>>.from(result['complaints'] ?? []);
           _isLoading = false;
         });
       } else {
@@ -57,37 +58,30 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: const Text('File a Complaint',
-              style: TextStyle(fontWeight: FontWeight.w700)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: const BilingualLabel(
+            englishText: 'FILE A COMPLAINT',
+            urduText: 'شکایت درج کریں',
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
                   value: selectedType,
-                  decoration: InputDecoration(
-                    labelText: 'Complaint Type',
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  items: types
-                      .map((t) => DropdownMenuItem(value: t, child: Text(t)))
-                      .toList(),
+                  decoration: const InputDecoration(labelText: 'Complaint Type'),
+                  items: types.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
                   onChanged: (v) {
                     if (v != null) setDialogState(() => selectedType = v);
                   },
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: detailsController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
+                  maxLines: 4,
+                  decoration: const InputDecoration(
                     labelText: 'Complaint Details',
                     alignLabelWithHint: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
               ],
@@ -96,15 +90,9 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child:
-                  Text('Cancel', style: TextStyle(color: Colors.grey.shade600)),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A5C2A),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
               onPressed: () async {
                 if (detailsController.text.trim().isEmpty) return;
                 try {
@@ -119,9 +107,8 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
                     if (mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                              'Complaint #${result['complaint_id']} submitted'),
-                          backgroundColor: const Color(0xFF1A5C2A),
+                          content: Text('Complaint #${result['complaint_id']} submitted'),
+                          backgroundColor: AppColors.success,
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -131,8 +118,7 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
                   if (ctx.mounted) Navigator.pop(ctx);
                 }
               },
-              child:
-                  const Text('Submit', style: TextStyle(color: Colors.white)),
+              child: const Text('Submit'),
             ),
           ],
         ),
@@ -143,148 +129,97 @@ class _ComplaintsScreenState extends State<ComplaintsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
-        title: const Text('Complaints & Support'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF1A5C2A),
-        elevation: 0.5,
+        title: const Text('Official Complaints Registry'),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: const Color(0xFF1A5C2A),
         onPressed: _showNewComplaintDialog,
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: const Text('New Complaint',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        icon: const Icon(Icons.add),
+        label: const Text('File Complaint'),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFF1A5C2A)))
+          ? const Center(child: CircularProgressIndicator())
           : _complaints.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.headset_mic_rounded,
-                          size: 56, color: Colors.grey.shade300),
-                      const SizedBox(height: 12),
-                      Text('No complaints filed',
-                          style: TextStyle(
-                              fontSize: 15, color: Colors.grey.shade500)),
-                      const SizedBox(height: 4),
-                      Text('Tap + to file a new complaint',
-                          style: TextStyle(
-                              fontSize: 12, color: Colors.grey.shade400)),
+                      const Icon(Icons.speaker_notes_off_outlined, size: 64, color: AppColors.outline),
+                      const SizedBox(height: AppSpacing.md),
+                      Text('No complaints found', style: Theme.of(context).textTheme.titleMedium),
                     ],
                   ),
                 )
               : RefreshIndicator(
                   onRefresh: _loadComplaints,
                   child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.edgeMargin),
                     itemCount: _complaints.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
                     itemBuilder: (_, index) {
                       final c = _complaints[index];
                       final isOpen = c['status'] == 'Open';
-                      return Material(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                        elevation: 1,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ComplaintDetailsScreen(
-                                  complaintId: c['complaint_id'],
-                                  citizenName: widget.citizenName,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ComplaintDetailsScreen(
+                                complaintId: c['complaint_id'],
+                                citizenName: widget.citizenName,
+                              ),
+                            ),
+                          ).then((_) => _loadComplaints());
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Container(
+                          padding: const EdgeInsets.all(AppSpacing.lg),
+                          decoration: AppDecorations.officialCard,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryContainer,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Icon(Icons.assignment_late_outlined, color: AppColors.primary),
+                              ),
+                              const SizedBox(width: AppSpacing.md),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Complaint #${c['complaint_id']}',
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primary,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      c['complaint_type'] ?? '',
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      (c['submitted_date'] ?? '').toString().split('.').first,
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: AppColors.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ).then((_) => _loadComplaints());
-                          },
-                          borderRadius: BorderRadius.circular(14),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: (isOpen
-                                            ? const Color(0xFFE07B00)
-                                            : const Color(0xFF1A5C2A))
-                                        .withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Icon(
-                                    isOpen
-                                        ? Icons.pending_actions_rounded
-                                        : Icons.check_circle_rounded,
-                                    color: isOpen
-                                        ? const Color(0xFFE07B00)
-                                        : const Color(0xFF1A5C2A),
-                                  ),
-                                ),
-                                const SizedBox(width: 14),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Complaint No. ${c['complaint_id']}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        c['complaint_type'] ?? '',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        (c['submitted_date'] ?? '')
-                                            .toString()
-                                            .split('.')
-                                            .first,
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.grey.shade400,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: (isOpen
-                                            ? const Color(0xFFE07B00)
-                                            : const Color(0xFF1A5C2A))
-                                        .withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    c['status'] ?? '',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w700,
-                                      color: isOpen
-                                          ? const Color(0xFFE07B00)
-                                          : const Color(0xFF1A5C2A),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              StampBadge(
+                                status: isOpen ? StampStatus.pending : StampStatus.resolved,
+                                customText: c['status'],
+                              ),
+                            ],
                           ),
                         ),
                       );

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Book Appointment - LandTrackPK</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#c9a84c",
+                        "secondary-container": "#dfe0e0",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#616363",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#01411c",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1b1b",
+                        "on-primary-fixed-variant": "#17512a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed": "#ffe08f",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#503d00",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "outline": "#717970",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c0c9be",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-tint": "#326a40",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary-container": "#74ae7e",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#99d5a2",
+                        "secondary": "#5d5f5f",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f1bc",
+                        "primary": "#00290f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#414941",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "edge-margin": "20px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-sm": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .watermark-bg {
+            background-image: url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M200 100 L250 150 L200 200 L150 150 Z' fill='%2301411c' fill-opacity='0.03'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Source Serif 4' font-size='12' fill='%2301411c' fill-opacity='0.02'%3ELAND REVENUE AUTHORITY%3C/text%3E%3C/svg%3E");
+            background-repeat: repeat;
+        }
+        .guilloche-border {
+            border: 1px solid transparent;
+            border-image: repeating-linear-gradient(45deg, #c9a84c, #c9a84c 2px, transparent 2px, transparent 4px) 1;
+        }
+        .official-seal {
+            box-shadow: inset 0 0 0 2px #c9a84c, 0 4px 12px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen watermark-bg pb-24">
+<!-- Top Navigation -->
+<header class="bg-surface docked full-width top-0 border-b border-outline-variant flex justify-between items-center w-full px-edge-margin h-16 z-50 sticky">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-sm rounded-full transition-colors duration-150">
+<span class="material-symbols-outlined">translate</span>
+</button>
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+</header>
+<main class="max-w-xl mx-auto px-edge-margin py-xl">
+<!-- Section Header -->
+<div class="mb-xl text-center">
+<h2 class="font-display-lg text-display-lg text-primary mb-xs">Book Appointment</h2>
+<p class="font-body-md text-on-surface-variant">اپائنٹمنٹ بک کریں۔</p>
+<div class="w-16 h-1 bg-tertiary-container mx-auto mt-md rounded-full"></div>
+</div>
+<!-- Booking Form Container -->
+<div class="space-y-xl">
+<!-- Form Step 1: Office Selection -->
+<section class="bg-surface-container-lowest border border-outline-variant p-lg shadow-sm rounded-lg">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary">store</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Select Revenue Office</h3>
+</div>
+<div class="space-y-md">
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-xs">DISTRICT / ضلع</label>
+<select class="w-full border-b border-outline bg-transparent py-sm focus:border-primary outline-none transition-colors">
+<option>Lahore</option>
+<option>Islamabad</option>
+<option>Karachi</option>
+<option>Rawalpindi</option>
+</select>
+</div>
+<div>
+<label class="block font-label-bold text-label-bold text-on-surface mb-xs">TEHSIL / تحصیل</label>
+<select class="w-full border-b border-outline bg-transparent py-sm focus:border-primary outline-none transition-colors">
+<option>Model Town</option>
+<option>Cantonment</option>
+<option>Raiwind</option>
+<option>Shalimar</option>
+</select>
+</div>
+<div class="mt-md bg-surface-container-low p-md rounded border-l-4 border-primary">
+<p class="font-label-bold text-primary text-[10px] tracking-widest uppercase mb-1">Office Address</p>
+<p class="font-body-md text-on-surface-variant">Plot #42, Land Revenue Complex, Ferozepur Road, Lahore.</p>
+</div>
+</div>
+</section>
+<!-- Form Step 2: Schedule -->
+<section class="bg-surface-container-lowest border border-outline-variant p-lg shadow-sm rounded-lg">
+<div class="flex items-center gap-sm mb-md">
+<span class="material-symbols-outlined text-primary">calendar_month</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">Select Date &amp; Time</h3>
+</div>
+<!-- Date Grid -->
+<div class="grid grid-cols-4 gap-sm mb-lg">
+<button class="flex flex-col items-center p-sm rounded border border-outline-variant hover:bg-secondary-container transition-colors">
+<span class="font-label-bold text-label-bold">MON</span>
+<span class="font-headline-sm text-headline-sm">12</span>
+</button>
+<button class="flex flex-col items-center p-sm rounded border border-primary bg-primary text-on-primary">
+<span class="font-label-bold text-label-bold">TUE</span>
+<span class="font-headline-sm text-headline-sm">13</span>
+</button>
+<button class="flex flex-col items-center p-sm rounded border border-outline-variant hover:bg-secondary-container transition-colors">
+<span class="font-label-bold text-label-bold">WED</span>
+<span class="font-headline-sm text-headline-sm">14</span>
+</button>
+<button class="flex flex-col items-center p-sm rounded border border-outline-variant hover:bg-secondary-container transition-colors">
+<span class="font-label-bold text-label-bold">THU</span>
+<span class="font-headline-sm text-headline-sm">15</span>
+</button>
+</div>
+<!-- Time Slots -->
+<div class="grid grid-cols-2 gap-sm">
+<button class="p-sm text-center border border-outline-variant rounded hover:bg-secondary-container transition-colors">09:00 AM</button>
+<button class="p-sm text-center border border-outline-variant rounded hover:bg-secondary-container transition-colors">10:30 AM</button>
+<button class="p-sm text-center border border-primary bg-primary-container text-on-primary-container rounded">12:00 PM</button>
+<button class="p-sm text-center border border-outline-variant rounded hover:bg-secondary-container transition-colors">02:30 PM</button>
+</div>
+</section>
+<!-- Final Action -->
+<button class="w-full bg-[#01411C] text-white py-md font-label-bold text-lg rounded-lg shadow-md active:scale-95 transition-transform flex items-center justify-center gap-sm" onclick="document.getElementById('confirmation-modal').classList.remove('hidden')">
+                CONFIRM APPOINTMENT
+                <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</main>
+<!-- Success Confirmation Overlay (Modal Style) -->
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[60] flex items-center justify-center p-edge-margin hidden" id="confirmation-modal">
+<div class="bg-surface-container-lowest max-w-sm w-full rounded-xl overflow-hidden relative shadow-2xl animate-in fade-in zoom-in duration-300">
+<!-- Certificate Header -->
+<div class="bg-primary-container h-2 w-full"></div>
+<div class="p-lg text-center relative">
+<!-- Seal -->
+<div class="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-[#c9a84c] rounded-full border-4 border-white flex items-center justify-center official-seal">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div class="mt-12 mb-md">
+<h4 class="font-headline-sm text-headline-sm text-primary">Appointment Verified</h4>
+<p class="font-body-md text-on-surface-variant">آپ کی اپائنٹمنٹ کی تصدیق ہو گئی ہے۔</p>
+</div>
+<!-- Receipt Slip -->
+<div class="border-2 border-dashed border-outline-variant p-md bg-surface rounded-lg relative overflow-hidden">
+<!-- Arabic Motif Watermark -->
+<div class="absolute inset-0 opacity-5 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-9xl">account_balance</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-sm mb-sm">
+<span class="font-label-bold text-xs uppercase opacity-60">Ticket ID</span>
+<span class="font-label-bold text-xs text-primary">LTPK-992031-X</span>
+</div>
+<div class="space-y-sm text-left">
+<div class="flex justify-between">
+<span class="font-body-md text-on-surface-variant">Office:</span>
+<span class="font-label-bold text-primary">Lahore Model Town</span>
+</div>
+<div class="flex justify-between">
+<span class="font-body-md text-on-surface-variant">Date:</span>
+<span class="font-label-bold text-primary">Oct 13, 2023</span>
+</div>
+<div class="flex justify-between">
+<span class="font-body-md text-on-surface-variant">Time:</span>
+<span class="font-label-bold text-primary">12:00 PM</span>
+</div>
+</div>
+<div class="mt-lg flex justify-center">
+<div class="p-sm bg-white border border-outline-variant rounded">
+<img alt="Secure QR code for appointment verification" class="w-32 h-32 object-contain" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+</div>
+</div>
+</div>
+<div class="mt-lg space-y-sm">
+<button class="w-full bg-primary text-on-primary py-sm rounded font-label-bold" onclick="window.print()">DOWNLOAD SLIP</button>
+<button class="w-full bg-transparent text-primary py-sm rounded font-label-bold border border-primary" onclick="document.getElementById('confirmation-modal').classList.add('hidden')">CLOSE</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-lg py-sm pb-safe bg-surface-container border-t border-outline-variant shadow-md rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-all duration-200 p-xs rounded" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-sm text-label-sm">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-all duration-200 p-xs rounded" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:w-1 after:h-1 after:bg-tertiary-container after:rounded-full after:mt-1 scale-105" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-sm text-label-sm">Verify</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-all duration-200 p-xs rounded" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for date buttons
+        const dateBtns = document.querySelectorAll('main section:nth-of-type(2) button');
+        dateBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                dateBtns.forEach(b => {
+                    b.classList.remove('bg-primary', 'text-on-primary', 'bg-primary-container', 'text-on-primary-container');
+                    b.classList.add('bg-transparent', 'text-on-background', 'border-outline-variant');
+                });
+                btn.classList.add('bg-primary-container', 'text-on-primary-container');
+            });
+        });
+    </script>
+</body></html>

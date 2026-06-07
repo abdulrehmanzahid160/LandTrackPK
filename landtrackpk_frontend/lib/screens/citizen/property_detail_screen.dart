@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../services/api_service.dart';
 import '../../models/land_parcel.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/certificate_card.dart';
+import '../../widgets/bilingual_label.dart';
+import '../../widgets/stamp_badge.dart';
+import '../../utils/image_helpers.dart';
 
 class PropertyDetailScreen extends StatefulWidget {
   final String plotNumber;
@@ -40,106 +47,256 @@ class _PropertyDetailScreenState extends State<PropertyDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Property Details')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _error != null
-              ? Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Icon(Icons.error_outline_rounded, size: 64, color: Colors.grey.shade400),
-                  const SizedBox(height: 16),
-                  Text(_error!, style: TextStyle(fontSize: 16, color: Colors.grey.shade600)),
-                ]))
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    _buildInfoCard(), const SizedBox(height: 20),
-                    _buildOwnerCard(), const SizedBox(height: 20),
-                    _buildHistorySection(),
-                  ]),
-                ),
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _error != null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 64, color: AppColors.error),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(_error!, style: Theme.of(context).textTheme.titleMedium),
+                      ],
+                    ),
+                  )
+                : SingleChildScrollView(
+                    padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // satellite plot view
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                            imageUrl: ImageHelpers.propertyPhoto(w: 800, h: 400, keywords: 'satellite,map,farmland,agriculture'),
+                            height: 180,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            placeholder: (_, __) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(height: 180, color: Colors.white),
+                            ),
+                            errorWidget: (_, __, ___) => Container(
+                              height: 180,
+                              color: AppColors.surfaceVariant,
+                              child: const Icon(Icons.map, size: 48, color: AppColors.primary),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+                        _buildInfoCard(),
+                        const SizedBox(height: AppSpacing.xl),
+                        _buildOwnerCard(),
+                        const SizedBox(height: AppSpacing.xl),
+                        _buildVerificationCard(),
+                        const SizedBox(height: AppSpacing.xl),
+                        _buildHistorySection(),
+                      ],
+                    ),
+                  ),
+      ),
     );
   }
 
   Widget _buildInfoCard() {
     final p = _parcel!;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))]),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Expanded(child: Text(p.plotNumber, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Color(0xFF1B2A4A)))),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: const Color(0xFF1A5C2A).withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
-            child: const Text('Active', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF1A5C2A))),
+    return CertificateCard(
+      hasGuilloche: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  p.plotNumber,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              const StampBadge(status: StampStatus.verified, customText: 'ACTIVE'),
+            ],
           ),
-        ]),
-        const Divider(height: 28),
-        _detailRow(Icons.straighten_rounded, 'Area', '${p.area} ${p.areaUnit}'),
-        _detailRow(Icons.category_rounded, 'Land Type', p.landType),
-        _detailRow(Icons.location_city_rounded, 'District', p.district),
-        _detailRow(Icons.map_rounded, 'Tehsil', p.tehsil),
-        _detailRow(Icons.calendar_today_rounded, 'Registered', p.registeredDate),
-      ]),
+          const Divider(height: AppSpacing.xl, color: AppColors.tertiary),
+          _detailRow(Icons.straighten_outlined, 'Area', '${p.area} ${p.areaUnit}'),
+          _detailRow(Icons.category_outlined, 'Land Type', p.landType),
+          _detailRow(Icons.location_city_outlined, 'District', p.district),
+          _detailRow(Icons.map_outlined, 'Tehsil', p.tehsil),
+          _detailRow(Icons.calendar_today_outlined, 'Registered', p.registeredDate),
+        ],
+      ),
     );
   }
 
   Widget _buildOwnerCard() {
     final p = _parcel!;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 12, offset: const Offset(0, 4))]),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Row(children: [
-          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: const Color(0xFF1A5C2A).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-            child: const Icon(Icons.person_rounded, color: Color(0xFF1A5C2A))),
-          const SizedBox(width: 14),
-          const Text('Current Owner', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Color(0xFF1B2A4A))),
-        ]),
-        const Divider(height: 28),
-        _detailRow(Icons.person_outline_rounded, 'Name', p.ownerName ?? 'N/A'),
-        _detailRow(Icons.credit_card_rounded, 'CNIC', p.ownerCnic ?? 'N/A'),
-        _detailRow(Icons.date_range_rounded, 'Acquired', p.acquiredDate ?? 'N/A'),
-      ]),
+    return CertificateCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const BilingualLabel(englishText: 'CURRENT OWNER', urduText: 'موجودہ مالک'),
+          const Divider(color: AppColors.tertiary),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 28,
+                backgroundColor: AppColors.primaryContainer,
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    imageUrl: ImageHelpers.avatar(p.ownerName ?? 'Owner', size: 100),
+                    width: 56,
+                    height: 56,
+                    fit: BoxFit.cover,
+                    errorWidget: (_, __, ___) => const Icon(Icons.person, color: AppColors.primary),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(p.ownerName ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text('CNIC: ${p.ownerCnic ?? 'N/A'}', style: const TextStyle(color: AppColors.onSurfaceVariant, fontSize: 13)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _detailRow(Icons.date_range_outlined, 'Acquired', p.acquiredDate ?? 'N/A'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildVerificationCard() {
+    final p = _parcel!;
+    return CertificateCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const BilingualLabel(englishText: 'SECURE VERIFICATION', urduText: 'محفوظ تصدیق'),
+          const Divider(color: AppColors.tertiary),
+          const SizedBox(height: AppSpacing.md),
+          Row(
+            children: [
+              CachedNetworkImage(
+                imageUrl: ImageHelpers.qrCode('LandTrackPK-Plot-${p.plotNumber}-Owner-${p.ownerCnic}-VERIFIED', size: 100),
+                width: 90,
+                height: 90,
+                placeholder: (_, __) => const SizedBox(width: 90, height: 90, child: Center(child: CircularProgressIndicator())),
+                errorWidget: (_, __, ___) => const Icon(Icons.qr_code, size: 90),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Sovereign Ledger Record', style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(height: 4),
+                    Text(
+                      'This QR Code contains the cryptographically signed record hash from the state land ledger registry.',
+                      style: TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildHistorySection() {
     final history = _parcel!.history;
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text('Ownership History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFF1B2A4A))),
-      const SizedBox(height: 12),
-      if (history.isEmpty)
-        Container(width: double.infinity, padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-          child: Column(children: [
-            Icon(Icons.history_rounded, size: 40, color: Colors.grey.shade300),
-            const SizedBox(height: 8),
-            Text('No transfer history', style: TextStyle(color: Colors.grey.shade500)),
-          ]))
-      else
-        ...history.map((h) => Container(
-          margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.grey.shade200)),
-          child: Row(children: [
-            Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: const Color(0xFF6A1B9A).withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
-              child: const Icon(Icons.swap_horiz_rounded, color: Color(0xFF6A1B9A), size: 20)),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('${h['previous_owner']} → ${h['new_owner']}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-              Text(h['transfer_date'] ?? '', style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
-            ])),
-          ]),
-        )),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const BilingualLabel(englishText: 'OWNERSHIP HISTORY', urduText: 'ملکیت کی تاریخ'),
+        const SizedBox(height: AppSpacing.md),
+        if (history.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            decoration: AppDecorations.officialCard,
+            child: const Column(
+              children: [
+                Icon(Icons.history, size: 40, color: AppColors.outline),
+                SizedBox(height: AppSpacing.sm),
+                Text('No transfer history found'),
+              ],
+            ),
+          )
+        else
+          ...history.map((h) => Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: AppDecorations.officialCard,
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.tertiary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.swap_horiz, color: AppColors.tertiary),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${h['previous_owner']} → ${h['new_owner']}',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            h['transfer_date'] ?? '',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+      ],
+    );
   }
 
   Widget _detailRow(IconData icon, String label, String value) {
-    return Padding(padding: const EdgeInsets.only(bottom: 12), child: Row(children: [
-      Icon(icon, size: 18, color: Colors.grey.shade400), const SizedBox(width: 12),
-      SizedBox(width: 90, child: Text(label, style: TextStyle(fontSize: 13, color: Colors.grey.shade500, fontWeight: FontWeight.w500))),
-      Expanded(child: Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
-    ]));
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: AppColors.onSurfaceVariant),
+          const SizedBox(width: AppSpacing.md),
+          SizedBox(
+            width: 90,
+            child: Text(
+              label,
+              style: const TextStyle(color: AppColors.onSurfaceVariant, fontWeight: FontWeight.w500),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

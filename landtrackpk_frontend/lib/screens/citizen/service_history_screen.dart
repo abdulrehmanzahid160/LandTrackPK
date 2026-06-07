@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/stamp_badge.dart';
 
 class ServiceHistoryScreen extends StatefulWidget {
   final int citizenId;
@@ -35,8 +37,7 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
       if (mounted && result['success'] == true) {
         setState(() {
           _visits = List<Map<String, dynamic>>.from(result['visits'] ?? []);
-          _transactions =
-              List<Map<String, dynamic>>.from(result['transactions'] ?? []);
+          _transactions = List<Map<String, dynamic>>.from(result['transactions'] ?? []);
           _isLoading = false;
         });
       } else {
@@ -50,54 +51,46 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         title: const Text('My Service History'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF1A5C2A),
-        elevation: 0.5,
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFF1A5C2A)))
+          ? const Center(child: CircularProgressIndicator())
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edgeMargin),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'My Service History',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF1B2A4A),
-                        ),
+                      Text(
+                        'Service History',
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.primary,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'View details of the services you have availed in the past',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                            ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
 
                 // Tab Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.edgeMargin),
                   child: Container(
                     height: 44,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
+                      color: AppColors.primaryContainer,
                       borderRadius: BorderRadius.circular(22),
                     ),
                     child: TabBar(
@@ -105,21 +98,13 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
                       indicatorSize: TabBarIndicatorSize.tab,
                       dividerColor: Colors.transparent,
                       indicator: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF1A5C2A), Color(0xFF2E7D32)],
-                        ),
+                        color: AppColors.primary,
                         borderRadius: BorderRadius.circular(22),
                       ),
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.grey.shade700,
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 13,
-                      ),
+                      labelColor: AppColors.onPrimary,
+                      unselectedLabelColor: AppColors.onSurfaceVariant,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
                       tabs: const [
                         Tab(text: 'My Visits'),
                         Tab(text: 'My Transactions'),
@@ -128,7 +113,7 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
                   ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
 
                 // Tab Views
                 Expanded(
@@ -147,13 +132,12 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
 
   Widget _buildVisitsTab() {
     if (_visits.isEmpty) {
-      return _buildEmptyState(
-          Icons.event_note_rounded, 'No visit records found');
+      return _buildEmptyState(Icons.event_note_outlined, 'No visit records found');
     }
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
       itemCount: _visits.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
       itemBuilder: (_, index) {
         final v = _visits[index];
         return _VisitCard(
@@ -171,13 +155,12 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
 
   Widget _buildTransactionsTab() {
     if (_transactions.isEmpty) {
-      return _buildEmptyState(
-          Icons.receipt_long_rounded, 'No transaction records found');
+      return _buildEmptyState(Icons.receipt_long_outlined, 'No transaction records found');
     }
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
       itemCount: _transactions.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
       itemBuilder: (_, index) {
         final t = _transactions[index];
         return _TransactionCard(
@@ -198,10 +181,9 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 56, color: Colors.grey.shade300),
-          const SizedBox(height: 12),
-          Text(message,
-              style: TextStyle(fontSize: 15, color: Colors.grey.shade500)),
+          Icon(icon, size: 56, color: AppColors.outline),
+          const SizedBox(height: AppSpacing.md),
+          Text(message, style: Theme.of(context).textTheme.titleMedium),
         ],
       ),
     );
@@ -211,10 +193,6 @@ class _ServiceHistoryScreenState extends State<ServiceHistoryScreen>
     if (rawDate.isEmpty) return '';
     try {
       final dt = DateTime.parse(rawDate);
-      const months = [
-        '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-      ];
       return '${dt.day.toString().padLeft(2, '0')}/${dt.month.toString().padLeft(2, '0')}/${dt.year % 100}';
     } catch (_) {
       return rawDate.split(' ').first;
@@ -244,56 +222,36 @@ class _VisitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFD0E8D4), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: AppDecorations.officialCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: Token + Date
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Token No. $tokenNumber',
-                style: const TextStyle(
-                  fontSize: 16,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF1B2A4A),
+                  color: AppColors.primary,
                 ),
               ),
               Text(
                 date,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade600,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // Service Center
+          const SizedBox(height: AppSpacing.md),
           _infoRow('Service Center:', serviceCenter, time),
-          const SizedBox(height: 6),
-
-          // Tehsil
+          const SizedBox(height: AppSpacing.xs),
           _infoRow('Tehsil:', tehsil, null),
-
           if (reason.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            _infoRow('Reason of Visit:', reason, null),
+            const SizedBox(height: AppSpacing.xs),
+            _infoRow('Reason:', reason, null),
           ],
         ],
       ),
@@ -305,33 +263,22 @@ class _VisitCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 110,
+          width: 100,
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey.shade500,
-            ),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.onSurfaceVariant),
           ),
         ),
         Expanded(
           child: Text(
             value,
-            style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF1B2A4A),
-            ),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.onSurface),
           ),
         ),
         if (trailing != null)
           Text(
             trailing,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey.shade500,
-            ),
+            style: const TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant, fontWeight: FontWeight.bold),
           ),
       ],
     );
@@ -360,86 +307,45 @@ class _TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPending = status == 'Pending';
-    final statusColor = isPending
-        ? const Color(0xFFE07B00)
-        : status == 'Approved'
-            ? const Color(0xFF1A5C2A)
-            : const Color(0xFFC62828);
+    final stampStatus = isPending ? StampStatus.pending : (status == 'Approved' ? StampStatus.verified : StampStatus.rejected);
 
     return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFD0E8D4), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: AppDecorations.officialCard,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Plot + status
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A5C2A).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
+                  color: AppColors.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.swap_horiz_rounded,
-                    color: Color(0xFF1A5C2A), size: 20),
+                child: const Icon(Icons.swap_horiz_outlined, color: AppColors.primary, size: 20),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(plotNumber,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 15)),
-                    Text(district,
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade500)),
+                    Text(plotNumber, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
+                    Text(district, style: const TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant)),
                   ],
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  status,
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: statusColor,
-                  ),
-                ),
-              ),
+              StampBadge(status: stampStatus, customText: status),
             ],
           ),
-          const Divider(height: 20),
-          Text('$fromOwner → $toOwner',
-              style:
-                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+          const Divider(height: AppSpacing.xl),
+          Text('$fromOwner → $toOwner', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
           const SizedBox(height: 4),
-          Text(reason,
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+          Text(reason, style: const TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant)),
           const SizedBox(height: 6),
           Align(
             alignment: Alignment.centerRight,
-            child: Text(date,
-                style:
-                    TextStyle(fontSize: 11, color: Colors.grey.shade400)),
+            child: Text(date, style: const TextStyle(fontSize: 11, color: AppColors.onSurfaceVariant, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

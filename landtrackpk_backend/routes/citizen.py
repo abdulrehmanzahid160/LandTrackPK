@@ -67,6 +67,41 @@ def get_citizen(cnic):
         return jsonify({'success': False, 'message': str(e)}), 500
 
 
+@citizen_bp.route('/dispute/create', methods=['POST'])
+def create_dispute():
+    """
+    Files a new land dispute against a specific plot.
+    """
+    try:
+        data = request.get_json()
+        plot_number = data.get('plot_number')
+        citizen_id = data.get('citizen_id')
+        description = data.get('description')
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        # Resolve PlotID from PlotNumber
+        cursor.execute("SELECT PlotID FROM LandParcels WHERE PlotNumber = ?", (plot_number,))
+        plot_row = cursor.fetchone()
+        if not plot_row:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Plot not found with that plot number'}), 404
+        plot_id = plot_row.PlotID
+
+        cursor.execute("""
+            INSERT INTO Disputes (PlotID, FiledByCitizenID, Description, Status, FiledDate)
+            VALUES (?, ?, ?, 'Open', GETDATE())
+        """, (plot_id, citizen_id, description))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({'success': True, 'message': 'Dispute filed successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+
 @citizen_bp.route('/disputes', methods=['GET'])
 def get_disputes():
     try:
@@ -404,5 +439,17 @@ def add_complaint_comment():
             'success': True,
             'message': 'Comment added successfully'
         })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@citizen_bp.route('/dispute/resolve/<int:dispute_id>', methods=['POST'])
+def resolve_dispute(dispute_id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE Disputes SET Status = 'Resolved' WHERE DisputeID = ?", (dispute_id,))
+        conn.commit()
+        conn.close()
+        return jsonify({'success': True, 'message': 'Dispute resolved successfully'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../services/api_service.dart';
 import '../services/session_service.dart';
 import 'citizen/citizen_dashboard.dart';
 import 'officer/officer_dashboard.dart';
+import '../theme/app_theme.dart';
+import '../widgets/bilingual_label.dart';
+import '../widgets/page_transitions.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,8 +16,7 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>
-    with SingleTickerProviderStateMixin {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _cnicController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,30 +24,10 @@ class _LoginScreenState extends State<LoginScreen>
   bool _isLoading = false;
   bool _obscurePassword = true;
 
-  late AnimationController _animController;
-  late Animation<Offset> _slideAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.2),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic),
-    );
-    _animController.forward();
-  }
-
   @override
   void dispose() {
     _cnicController.dispose();
     _passwordController.dispose();
-    _animController.dispose();
     super.dispose();
   }
 
@@ -77,14 +60,14 @@ class _LoginScreenState extends State<LoginScreen>
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => destination),
+          DocumentFlipPageRoute(page: destination),
         );
       } else {
-        _showSnackBar(result['message'] ?? 'Invalid credentials', Colors.red);
+        _showSnackBar(result['message'] ?? 'Invalid credentials', AppColors.error);
       }
     } catch (e) {
       if (mounted) {
-        _showSnackBar('Connection error. Is the server running?', Colors.red);
+        _showSnackBar('Connection error. Is the server running?', AppColors.error);
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -97,259 +80,237 @@ class _LoginScreenState extends State<LoginScreen>
         content: Text(message),
         backgroundColor: color,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    const Color brandGreen = Color(0xFF1A5C2A);
-    const Color brandWhite = Colors.white;
-
     return Scaffold(
-      backgroundColor: brandGreen,
+      appBar: AppBar(
+        title: Row(
+          children: [
+            const Icon(Icons.account_balance_outlined, color: AppColors.primary),
+            const SizedBox(width: AppSpacing.sm),
+            Text('LandTrackPK', style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.primary)),
+          ],
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppSpacing.md),
+            child: Image.asset('assets/images/logo.png', width: 32, height: 32, errorBuilder: (_,__,___) => const SizedBox()),
+          )
+        ],
+      ),
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-
-                  // Logo with simple brand border (only white/green)
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: brandWhite,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: brandWhite, width: 3),
-                    ),
-                    child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Government of Pakistan',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: brandWhite,
-                      letterSpacing: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 36),
-
-                  // Login Box (Strictly White & Green Color Scheme)
-                  Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: brandWhite,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w800,
-                              color: brandGreen,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 6),
-                          const Text(
-                            'Enter your CNIC and password to access LandTrack PK',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: brandGreen,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 24),
-
-                          // CNIC Field (strictly two-color theme styling)
-                          TextFormField(
-                            controller: _cnicController,
-                            keyboardType: TextInputType.number,
-                            maxLength: 13,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            style: const TextStyle(
-                                color: brandGreen, fontWeight: FontWeight.w600),
-                            decoration: const InputDecoration(
-                              labelText: 'CNIC Number',
-                              labelStyle: TextStyle(color: brandGreen),
-                              hintText: '3520112345671',
-                              hintStyle: TextStyle(color: Colors.grey),
-                              prefixIcon: Icon(Icons.credit_card_rounded,
-                                  color: brandGreen),
-                              counterText: '',
-                              fillColor: Color(0xFFF4F6F4),
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFD0DCD0)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: brandGreen, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'CNIC is required';
-                              }
-                              if (value.length != 13) {
-                                return 'CNIC must be exactly 13 digits';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Password Field
-                          TextFormField(
-                            controller: _passwordController,
-                            obscureText: _obscurePassword,
-                            style: const TextStyle(
-                                color: brandGreen, fontWeight: FontWeight.w600),
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: const TextStyle(color: brandGreen),
-                              prefixIcon: const Icon(Icons.lock_rounded,
-                                  color: brandGreen),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off_rounded
-                                      : Icons.visibility_rounded,
-                                  color: brandGreen,
-                                ),
-                                onPressed: () => setState(
-                                    () => _obscurePassword = !_obscurePassword),
-                              ),
-                              fillColor: const Color(0xFFF4F6F4),
-                              filled: true,
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFD0DCD0)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: brandGreen, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Password is required';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
-                          // Role Dropdown
-                          DropdownButtonFormField<String>(
-                            value: _selectedRole,
-                            dropdownColor: brandWhite,
-                            style: const TextStyle(
-                                color: brandGreen, fontWeight: FontWeight.w600),
-                            decoration: const InputDecoration(
-                              labelText: 'Role',
-                              labelStyle: TextStyle(color: brandGreen),
-                              prefixIcon:
-                                  Icon(Icons.person_rounded, color: brandGreen),
-                              fillColor: Color(0xFFF4F6F4),
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Color(0xFFD0DCD0)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: brandGreen, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12)),
-                              ),
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                  value: 'Citizen', child: Text('Citizen')),
-                              DropdownMenuItem(
-                                  value: 'Officer', child: Text('Officer')),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() => _selectedRole = value);
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 24),
-
-                          // Login Button (Strictly brand colors)
-                          SizedBox(
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: brandGreen,
-                                foregroundColor: brandWhite,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: _isLoading ? null : _login,
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      width: 22,
-                                      height: 22,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.5,
-                                        color: brandWhite,
-                                      ),
-                                    )
-                                  : const Text(
-                                      'LOGIN',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.02,
+                child: Image.asset(
+                  'assets/images/guilloche_pattern.png',
+                  repeat: ImageRepeat.repeat,
+                  errorBuilder: (_,__,___) => const SizedBox(),
+                ),
               ),
             ),
+            Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+                child: Container(
+                  decoration: AppDecorations.certificateCard,
+                  padding: const EdgeInsets.all(AppSpacing.xl),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.onSurface, width: 2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.security, size: 40, color: AppColors.onSurface),
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          'Secure Access Portal',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        const Divider(color: AppColors.tertiary),
+                        Text(
+                          'GOVERNMENT OF PAKISTAN',
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: AppColors.tertiary,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                        const Divider(color: AppColors.tertiary),
+                        const SizedBox(height: AppSpacing.xl),
+                        
+                        // Role Toggle
+                        Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.background,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            children: [
+                              _buildRoleButton('Citizen', 'شہری'),
+                              _buildRoleButton('Officer', 'افسر'),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+
+                        const BilingualLabel(englishText: 'CNIC NUMBER', urduText: 'شناختی کارڈ نمبر'),
+                        TextFormField(
+                          controller: _cnicController,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            _CnicFormatter(),
+                          ],
+                          decoration: const InputDecoration(
+                            hintText: '00000-0000000-0',
+                            prefixIcon: Icon(Icons.badge_outlined),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) return 'Required';
+                            if (value.length != 15) return 'Invalid length';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+
+                        const BilingualLabel(englishText: 'PASSWORD', urduText: 'پاس ورڈ'),
+                        TextFormField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          decoration: InputDecoration(
+                            hintText: '••••••••',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility),
+                              onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                            ),
+                          ),
+                          validator: (v) => v!.isEmpty ? 'Required' : null,
+                        ),
+                        const SizedBox(height: AppSpacing.xl),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _login,
+                            child: _isLoading
+                                ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(color: AppColors.onPrimary))
+                                : const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('LOGIN TO SYSTEM'),
+                                      SizedBox(width: AppSpacing.md),
+                                      Icon(Icons.login),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: AppSpacing.lg),
+                        const Divider(),
+                        Padding(
+                          padding: const EdgeInsets.only(top: AppSpacing.md),
+                          child: Text(
+                            'THIS IS A SECURE GOVERNMENT SYSTEM.\nUNAUTHORIZED ACCESS IS STRICTLY PROHIBITED AND MONITORED.',
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors.onSurfaceVariant,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ).animate().slideY(begin: 0.1, duration: 400.ms, curve: Curves.easeOut).fadeIn(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRoleButton(String role, String urdu) {
+    final isSelected = _selectedRole == role;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedRole = role),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Column(
+            children: [
+              Text(
+                role.toUpperCase(),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: isSelected ? AppColors.onPrimary : AppColors.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                urdu,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: isSelected ? AppColors.onPrimary.withOpacity(0.8) : AppColors.outline,
+                ),
+                textDirection: TextDirection.rtl,
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _CnicFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    var text = newValue.text;
+    if (newValue.selection.baseOffset == 0) return newValue;
+
+    var buffer = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      buffer.write(text[i]);
+      var nonZeroIndex = i + 1;
+      if (nonZeroIndex % 5 == 0 && nonZeroIndex != text.length && nonZeroIndex < 6) {
+        buffer.write('-');
+      } else if (nonZeroIndex == 12 && nonZeroIndex != text.length) {
+        buffer.write('-');
+      }
+    }
+
+    var string = buffer.toString();
+    if (string.length > 15) {
+      return oldValue;
+    }
+
+    return newValue.copyWith(
+      text: string,
+      selection: TextSelection.collapsed(offset: string.length),
     );
   }
 }

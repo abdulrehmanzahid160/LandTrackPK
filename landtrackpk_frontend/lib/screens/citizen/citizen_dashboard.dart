@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../services/session_service.dart';
 import '../../services/api_service.dart';
+import '../../utils/image_helpers.dart';
 import '../login_screen.dart';
 import 'property_detail_screen.dart';
 import 'transfer_request_screen.dart';
@@ -10,6 +12,11 @@ import 'fard_screen.dart';
 import 'service_history_screen.dart';
 import 'book_appointment_screen.dart';
 import 'complaints_screen.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/news_ticker.dart';
+import '../../widgets/service_tile.dart';
+import '../../widgets/certificate_card.dart';
+import '../../widgets/bilingual_label.dart';
 
 class CitizenDashboard extends StatefulWidget {
   const CitizenDashboard({super.key});
@@ -22,59 +29,14 @@ class _CitizenDashboardState extends State<CitizenDashboard> {
   String _name = '';
   String _cnic = '';
   int _citizenId = 0;
-  final _searchController = TextEditingController();
-  final PageController _carouselController = PageController();
-  int _currentCarouselPage = 0;
-  Timer? _carouselTimer;
-
-  // Carousel slide data
-  final List<_CarouselSlide> _slides = [
-    _CarouselSlide(
-      gradient: [Color(0xFF1A5C2A), Color(0xFF2E7D32)],
-      title: 'Land Records\nDigitized',
-      subtitle: 'Secure & transparent property management',
-      icon: Icons.security_rounded,
-    ),
-    _CarouselSlide(
-      gradient: [Color(0xFF0D47A1), Color(0xFF1565C0)],
-      title: 'Fast Property\nTransfers',
-      subtitle: 'Online Intiqal in just a few taps',
-      icon: Icons.speed_rounded,
-    ),
-    _CarouselSlide(
-      gradient: [Color(0xFF4A148C), Color(0xFF7B1FA2)],
-      title: 'Verified\nOwnership',
-      subtitle: 'Government-backed Fard documents',
-      icon: Icons.verified_rounded,
-    ),
-  ];
+  int _navIndex = 0;
+  List<Map<String, dynamic>> _properties = [];
+  bool _isLoadingProperties = true;
 
   @override
   void initState() {
     super.initState();
     _loadSession();
-    _startCarouselTimer();
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _carouselController.dispose();
-    _carouselTimer?.cancel();
-    super.dispose();
-  }
-
-  void _startCarouselTimer() {
-    _carouselTimer = Timer.periodic(const Duration(seconds: 4), (_) {
-      if (_carouselController.hasClients) {
-        final nextPage = (_currentCarouselPage + 1) % _slides.length;
-        _carouselController.animateToPage(
-          nextPage,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
   }
 
   Future<void> _loadSession() async {
@@ -87,6 +49,24 @@ class _CitizenDashboardState extends State<CitizenDashboard> {
         _cnic = cnic;
         _citizenId = citizenId;
       });
+      _loadProperties();
+    }
+  }
+
+  Future<void> _loadProperties() async {
+    if (_cnic.isEmpty) return;
+    try {
+      final result = await ApiService.getCitizen(_cnic);
+      if (mounted && result['success'] == true) {
+        setState(() {
+          _properties = List<Map<String, dynamic>>.from(result['properties'] ?? []);
+          _isLoadingProperties = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => _isLoadingProperties = false);
+      }
     }
   }
 
@@ -101,819 +81,514 @@ class _CitizenDashboardState extends State<CitizenDashboard> {
     }
   }
 
-  Future<void> _searchPlot() async {
-    final plotNumber = _searchController.text.trim();
-    if (plotNumber.isEmpty) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PropertyDetailScreen(plotNumber: plotNumber),
-      ),
-    );
-  }
-
-  void _showCnicVerification() {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A5C2A).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.verified_user_rounded,
-                  color: Color(0xFF1A5C2A)),
-            ),
-            const SizedBox(width: 12),
-            const Text('CNIC Verified',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _verifyRow('Name', _name),
-            _verifyRow('CNIC', _cnic),
-            _verifyRow('Status', 'Active'),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1A5C2A).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.check_circle_rounded,
-                      color: Color(0xFF1A5C2A), size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Your CNIC has been verified by the system.',
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.grey.shade700),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close',
-                style: TextStyle(color: Color(0xFF1A5C2A))),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _verifyRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 60,
-            child: Text(label,
-                style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.w500)),
-          ),
-          Expanded(
-            child: Text(value,
-                style: const TextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w600)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top bar with language tag and profile avatar
-            Container(
-              color: Colors.transparent,
-              child: Stack(
-                children: [
-                  // Carousel
-                  SizedBox(
-                    height: 200,
-                    child: PageView.builder(
-                      controller: _carouselController,
-                      itemCount: _slides.length,
-                      onPageChanged: (i) =>
-                          setState(() => _currentCarouselPage = i),
-                      itemBuilder: (_, i) {
-                        final slide = _slides[i];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 0),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: slide.gradient,
-                            ),
-                          ),
-                          child: Stack(
-                            children: [
-                              // Decorative circles
-                              Positioned(
-                                right: -30,
-                                top: -30,
-                                child: Container(
-                                  width: 120,
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(0.08),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                right: 20,
-                                bottom: -40,
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white.withOpacity(0.05),
-                                  ),
-                                ),
-                              ),
-                              // Content
-                              Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(slide.icon,
-                                        color: Colors.white.withOpacity(0.9),
-                                        size: 36),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      slide.title,
-                                      style: const TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white,
-                                        height: 1.2,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      slide.subtitle,
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color:
-                                            Colors.white.withOpacity(0.85),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  // Language tag
-                  Positioned(
-                    top: 12,
-                    left: 12,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFE07B00),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.arrow_back,
-                              color: Colors.white, size: 14),
-                          const SizedBox(width: 4),
-                          const Text('Eng',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Profile avatar
-                  Positioned(
-                    top: 8,
-                    right: 12,
-                    child: GestureDetector(
-                      onTap: _logout,
-                      child: Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1565C0),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 6,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            _name.isNotEmpty
-                                ? _name[0].toUpperCase()
-                                : 'U',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            // Carousel dots
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _slides.length,
-                  (i) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: _currentCarouselPage == i ? 10 : 8,
-                    height: _currentCarouselPage == i ? 10 : 8,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentCarouselPage == i
-                          ? const Color(0xFF1B2A4A)
-                          : Colors.grey.shade300,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Main Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Main Menu title
-                    const Text(
-                      'Main Menu',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF1B2A4A),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // 6 Action Tiles in 2-column grid
-                    GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 1.15,
-                      children: [
-                        _MenuTile(
-                          icon: Icons.description_rounded,
-                          iconColor: const Color(0xFF1A5C2A),
-                          title: 'Get a\nFard',
-                          onTap: () {
-                            _showFardSearchDialog();
-                          },
-                        ),
-                        _MenuTile(
-                          icon: Icons.calendar_month_rounded,
-                          iconColor: const Color(0xFF5D4037),
-                          title: 'Book an\nAppointment',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => BookAppointmentScreen(
-                                    citizenId: _citizenId),
-                              ),
-                            );
-                          },
-                        ),
-                        _MenuTile(
-                          icon: Icons.apartment_rounded,
-                          iconColor: const Color(0xFF0D47A1),
-                          title: 'My\nProperties',
-                          onTap: () => _loadMyProperties(),
-                        ),
-                        _MenuTile(
-                          icon: Icons.history_rounded,
-                          iconColor: const Color(0xFF00796B),
-                          title: 'My Service\nHistory',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ServiceHistoryScreen(
-                                    citizenId: _citizenId),
-                              ),
-                            );
-                          },
-                        ),
-                        _MenuTile(
-                          icon: Icons.verified_user_rounded,
-                          iconColor: const Color(0xFF455A64),
-                          title: 'CNIC\nVerification',
-                          onTap: _showCnicVerification,
-                        ),
-                        _MenuTile(
-                          icon: Icons.headset_mic_rounded,
-                          iconColor: const Color(0xFF00897B),
-                          title: 'Complaints &\nSupport',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ComplaintsScreen(
-                                    citizenId: _citizenId,
-                                    citizenName: _name),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // Quick Actions section
-                    const Text(
-                      'Quick Actions',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1B2A4A),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Search Bar
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              decoration: const InputDecoration(
-                                hintText: 'Search Plot (e.g. LHR-2024-001)',
-                                hintStyle: TextStyle(fontSize: 13),
-                                prefixIcon:
-                                    Icon(Icons.search_rounded, size: 20),
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
-                              onSubmitted: (_) => _searchPlot(),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(right: 6),
-                            child: IconButton(
-                              onPressed: _searchPlot,
-                              icon:
-                                  const Icon(Icons.arrow_forward_rounded),
-                              style: IconButton.styleFrom(
-                                backgroundColor:
-                                    const Color(0xFF1A5C2A),
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Transfer Request + Disputes row
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _QuickActionCard(
-                            icon: Icons.swap_horiz_rounded,
-                            title: 'Transfer',
-                            color: const Color(0xFF1565C0),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      const TransferRequestScreen()),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _QuickActionCard(
-                            icon: Icons.gavel_rounded,
-                            title: 'Disputes',
-                            color: const Color(0xFFC62828),
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) =>
-                                      const DisputeScreen()),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 24),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   void _showFardSearchDialog() {
     final controller = TextEditingController();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Get Fard',
-            style: TextStyle(fontWeight: FontWeight.w700)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: const Text('Get Fard'),
         content: TextField(
           controller: controller,
-          decoration: InputDecoration(
-            hintText: 'Enter Plot Number',
-            prefixIcon: const Icon(Icons.search_rounded),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12)),
-          ),
+          decoration: const InputDecoration(hintText: 'Enter Plot Number'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: TextStyle(color: Colors.grey.shade600)),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A5C2A),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-            ),
             onPressed: () {
               final plot = controller.text.trim();
               if (plot.isNotEmpty) {
                 Navigator.pop(ctx);
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => FardScreen(plotNumber: plot),
-                  ),
+                  MaterialPageRoute(builder: (_) => FardScreen(plotNumber: plot)),
                 );
               }
             },
-            child:
-                const Text('Search', style: TextStyle(color: Colors.white)),
+            child: const Text('Search'),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _loadMyProperties() async {
-    if (_cnic.isEmpty) return;
-    try {
-      final result = await ApiService.getCitizen(_cnic);
-      if (mounted && result['success'] == true) {
-        final props =
-            List<Map<String, dynamic>>.from(result['properties'] ?? []);
-        _showPropertiesSheet(props);
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
-        );
-      }
-    }
-  }
+  // ─── TAB BODIES ────────────────────────────────────────
 
-  void _showPropertiesSheet(List<Map<String, dynamic>> properties) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) {
-        return DraggableScrollableSheet(
-          expand: false,
-          initialChildSize: 0.6,
-          maxChildSize: 0.9,
-          builder: (_, scrollController) {
-            return Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(2),
+  Widget _buildHomeTab() {
+    return Column(
+      children: [
+        const NewsTicker(
+          newsItems: [
+            'New policies for property transfer active from next month.',
+            'Ensure your CNIC is linked to your property record.',
+            'Report corrupt practices at 0800-LAND.'
+          ],
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Welcome header with flag
+                Row(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: ImageHelpers.pakistanFlag,
+                      width: 32,
+                      height: 20,
+                      errorWidget: (_, __, ___) => const SizedBox(),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        'Welcome, $_name',
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'My Properties',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF1B2A4A),
+                  ],
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                // Hero land image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: ImageHelpers.propertyPhoto(keywords: 'pakistan,agriculture,green,field'),
+                    height: 160,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    placeholder: (_, __) => Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(height: 160, color: Colors.white),
+                    ),
+                    errorWidget: (_, __, ___) => Container(
+                      height: 160,
+                      color: AppColors.primaryContainer,
+                      child: const Center(child: Icon(Icons.landscape, size: 48, color: AppColors.primary)),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: properties.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.home_work_rounded,
-                                    size: 48, color: Colors.grey.shade300),
-                                const SizedBox(height: 8),
-                                Text('No properties found',
-                                    style: TextStyle(
-                                        color: Colors.grey.shade500)),
-                              ],
+                ),
+                const SizedBox(height: AppSpacing.xl),
+
+                // Snapshot Card
+                CertificateCard(
+                  hasGuilloche: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const BilingualLabel(
+                        englishText: 'PROPERTY SNAPSHOT',
+                        urduText: 'جائیداد کا خلاصہ',
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      if (_isLoadingProperties)
+                        const CircularProgressIndicator()
+                      else if (_properties.isEmpty)
+                        const Text('No properties registered to your CNIC.')
+                      else
+                        Column(
+                          children: _properties.take(2).map((p) => ListTile(
+                            leading: const Icon(Icons.landscape, color: AppColors.tertiary),
+                            title: Text(p['plot_number'] ?? ''),
+                            subtitle: Text('${p['area']} ${p['area_unit']}'),
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => PropertyDetailScreen(plotNumber: p['plot_number'])),
                             ),
-                          )
-                        : ListView.separated(
-                            controller: scrollController,
-                            itemCount: properties.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: 12),
-                            itemBuilder: (_, index) {
-                              final p = properties[index];
-                              return _PropertyListCard(
-                                plotNumber: p['plot_number'] ?? '',
-                                area:
-                                    '${p['area']} ${p['area_unit'] ?? ''}',
-                                district: p['district'] ?? '',
-                                landType: p['land_type'] ?? '',
-                                onTap: () {
-                                  Navigator.pop(ctx);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          PropertyDetailScreen(
-                                        plotNumber: p['plot_number'],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
+                          )).toList(),
+                        ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: AppSpacing.xl),
+                const BilingualLabel(
+                  englishText: 'OFFICIAL SERVICES',
+                  urduText: 'سرکاری خدمات',
+                ),
+
+                GridView.count(
+                  crossAxisCount: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: AppSpacing.md,
+                  crossAxisSpacing: AppSpacing.md,
+                  childAspectRatio: 1.0,
+                  children: [
+                    ServiceTile(
+                      icon: Icons.description_outlined,
+                      englishLabel: 'Get a Fard',
+                      urduLabel: 'فرد حاصل کریں',
+                      onTap: _showFardSearchDialog,
+                    ),
+                    ServiceTile(
+                      icon: Icons.calendar_month_outlined,
+                      englishLabel: 'Book Appointment',
+                      urduLabel: 'وقت مقرر کریں',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => BookAppointmentScreen(citizenId: _citizenId)),
+                      ),
+                    ),
+                    ServiceTile(
+                      icon: Icons.swap_horiz_outlined,
+                      englishLabel: 'Transfer Request',
+                      urduLabel: 'انتقال کی درخواست',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TransferRequestScreen()),
+                      ),
+                    ),
+                    ServiceTile(
+                      icon: Icons.gavel_outlined,
+                      englishLabel: 'Disputes',
+                      urduLabel: 'تنازعات',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const DisputeScreen()),
+                      ),
+                    ),
+                    ServiceTile(
+                      icon: Icons.history_outlined,
+                      englishLabel: 'Service History',
+                      urduLabel: 'خدمات کی تاریخ',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ServiceHistoryScreen(citizenId: _citizenId)),
+                      ),
+                    ),
+                    ServiceTile(
+                      icon: Icons.headset_mic_outlined,
+                      englishLabel: 'Complaints',
+                      urduLabel: 'شکایات',
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => ComplaintsScreen(citizenId: _citizenId, citizenName: _name)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMapTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const BilingualLabel(
+            englishText: 'LAND MAP VIEW',
+            urduText: 'زمین کا نقشہ',
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: ImageHelpers.propertyPhoto(w: 900, h: 500, keywords: 'satellite,map,aerial,farmland'),
+              height: 280,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(height: 280, color: Colors.white),
+              ),
+              errorWidget: (_, __, ___) => Container(
+                height: 280,
+                color: AppColors.surfaceVariant,
+                child: const Center(child: Icon(Icons.map, size: 64, color: AppColors.primary)),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          // Property list with images
+          if (_isLoadingProperties)
+            const Center(child: CircularProgressIndicator())
+          else if (_properties.isEmpty)
+            CertificateCard(
+              child: Column(
+                children: [
+                  const Icon(Icons.map_outlined, size: 48, color: AppColors.onSurfaceVariant),
+                  const SizedBox(height: AppSpacing.sm),
+                  const Text('No land parcels found for your CNIC.'),
+                ],
+              ),
+            )
+          else
+            ..._properties.map((p) => Card(
+              margin: const EdgeInsets.only(bottom: AppSpacing.md),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    child: CachedNetworkImage(
+                      imageUrl: ImageHelpers.propertyPhoto(w: 600, h: 200, keywords: 'pakistan,land,${p['land_type'] ?? 'agricultural'}'),
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(height: 120, color: Colors.white),
+                      ),
+                      errorWidget: (_, __, ___) => Container(height: 120, color: AppColors.primaryContainer),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.landscape, color: AppColors.tertiary),
+                    title: Text(p['plot_number'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text('${p['area']} ${p['area_unit']} • ${p['district'] ?? ''}'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => PropertyDetailScreen(plotNumber: p['plot_number'])),
+                    ),
                   ),
                 ],
               ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _CarouselSlide {
-  final List<Color> gradient;
-  final String title;
-  final String subtitle;
-  final IconData icon;
-
-  const _CarouselSlide({
-    required this.gradient,
-    required this.title,
-    required this.subtitle,
-    required this.icon,
-  });
-}
-
-class _MenuTile extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final String title;
-  final VoidCallback onTap;
-
-  const _MenuTile({
-    required this.icon,
-    required this.iconColor,
-    required this.title,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      elevation: 1,
-      shadowColor: Colors.black.withOpacity(0.08),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: const Color(0xFFE0E8E4), width: 1),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: iconColor, size: 28),
-              ),
-              const Spacer(),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF1B2A4A),
-                  height: 1.3,
-                ),
-              ),
-            ],
-          ),
-        ),
+            )),
+        ],
       ),
     );
   }
-}
 
-class _QuickActionCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _QuickActionCard({
-    required this.icon,
-    required this.title,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
-      elevation: 1,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: color, size: 22),
-              ),
-              const SizedBox(width: 10),
-              Text(title,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w700, fontSize: 14)),
-            ],
+  Widget _buildVerifyTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+      child: Column(
+        children: [
+          const BilingualLabel(
+            englishText: 'VERIFICATION CENTER',
+            urduText: 'تصدیقی مرکز',
           ),
-        ),
+          const SizedBox(height: AppSpacing.xl),
+          // QR Code verification
+          CertificateCard(
+            hasGuilloche: true,
+            child: Column(
+              children: [
+                const Icon(Icons.verified_user, size: 48, color: AppColors.primary),
+                const SizedBox(height: AppSpacing.md),
+                const Text(
+                  'Your Digital Identity',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text('CNIC: $_cnic', style: const TextStyle(color: AppColors.onSurfaceVariant)),
+                Text('Name: $_name', style: const TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: AppSpacing.lg),
+                // QR Code from free API
+                CachedNetworkImage(
+                  imageUrl: ImageHelpers.qrCode('LandTrackPK-CNIC-$_cnic-VERIFIED', size: 160),
+                  width: 160,
+                  height: 160,
+                  placeholder: (_, __) => const SizedBox(
+                    width: 160,
+                    height: 160,
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (_, __, ___) => const Icon(Icons.qr_code, size: 160, color: AppColors.onSurfaceVariant),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                const Text(
+                  'Scan to verify identity',
+                  style: TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          // Property QR codes
+          if (_properties.isNotEmpty) ...[
+            const BilingualLabel(
+              englishText: 'PROPERTY CERTIFICATES',
+              urduText: 'جائیداد سرٹیفکیٹ',
+            ),
+            const SizedBox(height: AppSpacing.md),
+            ..._properties.map((p) => CertificateCard(
+              child: Row(
+                children: [
+                  CachedNetworkImage(
+                    imageUrl: ImageHelpers.qrCode('LandTrackPK-Plot-${p['plot_number']}'),
+                    width: 80,
+                    height: 80,
+                    errorWidget: (_, __, ___) => const Icon(Icons.qr_code, size: 80),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(p['plot_number'] ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text('${p['area']} ${p['area_unit']}', style: const TextStyle(color: AppColors.onSurfaceVariant)),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            const Icon(Icons.check_circle, size: 14, color: AppColors.primary),
+                            const SizedBox(width: 4),
+                            const Text('Verified', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+          ],
+        ],
       ),
     );
   }
-}
 
-class _PropertyListCard extends StatelessWidget {
-  final String plotNumber;
-  final String area;
-  final String district;
-  final String landType;
-  final VoidCallback onTap;
+  Widget _buildProfileTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+      child: Column(
+        children: [
+          const SizedBox(height: AppSpacing.xl),
+          // Avatar from UI Avatars API
+          CircleAvatar(
+            radius: 56,
+            backgroundColor: AppColors.primaryContainer,
+            child: ClipOval(
+              child: CachedNetworkImage(
+                imageUrl: ImageHelpers.avatar(_name.isEmpty ? 'User' : _name, size: 256),
+                width: 112,
+                height: 112,
+                fit: BoxFit.cover,
+                errorWidget: (_, __, ___) => const Icon(Icons.person, size: 56, color: AppColors.primary),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            _name,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'CNIC: $_cnic',
+            style: const TextStyle(color: AppColors.onSurfaceVariant),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primaryContainer,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Text('Citizen', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold, fontSize: 12)),
+          ),
+          const SizedBox(height: AppSpacing.xl),
 
-  const _PropertyListCard({
-    required this.plotNumber,
-    required this.area,
-    required this.district,
-    required this.landType,
-    required this.onTap,
-  });
+          // Stats row
+          Row(
+            children: [
+              Expanded(child: _profileStat('Properties', '${_properties.length}', Icons.landscape_outlined)),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: _profileStat('Status', 'Active', Icons.check_circle_outline)),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xl),
+
+          // Actions
+          _profileAction(Icons.description_outlined, 'My Fard Records', () => _showFardSearchDialog()),
+          _profileAction(Icons.history_outlined, 'Service History', () => Navigator.push(context, MaterialPageRoute(builder: (_) => ServiceHistoryScreen(citizenId: _citizenId)))),
+          _profileAction(Icons.headset_mic_outlined, 'My Complaints', () => Navigator.push(context, MaterialPageRoute(builder: (_) => ComplaintsScreen(citizenId: _citizenId, citizenName: _name)))),
+          _profileAction(Icons.gavel_outlined, 'My Disputes', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const DisputeScreen()))),
+          const Divider(height: 32),
+          _profileAction(Icons.logout, 'Logout', _logout, isDestructive: true),
+        ],
+      ),
+    );
+  }
+
+  Widget _profileStat(String label, String value, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: AppDecorations.officialCard,
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.primary, size: 28),
+          const SizedBox(height: 8),
+          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.primary)),
+          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant)),
+        ],
+      ),
+    );
+  }
+
+  Widget _profileAction(IconData icon, String label, VoidCallback onTap, {bool isDestructive = false}) {
+    return ListTile(
+      leading: Icon(icon, color: isDestructive ? AppColors.error : AppColors.primary),
+      title: Text(label, style: TextStyle(color: isDestructive ? AppColors.error : null, fontWeight: FontWeight.w500)),
+      trailing: Icon(Icons.chevron_right, color: isDestructive ? AppColors.error : AppColors.onSurfaceVariant),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFFF8FAF8),
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A5C2A).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(Icons.landscape_rounded,
-                    color: Color(0xFF1A5C2A)),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(plotNumber,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 15)),
-                    Text('$area · $district · $landType',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey.shade600)),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded, color: Colors.grey),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            CachedNetworkImage(
+              imageUrl: ImageHelpers.pakistanFlag,
+              width: 24,
+              height: 16,
+              errorWidget: (_, __, ___) => const SizedBox(),
+            ),
+            const SizedBox(width: 8),
+            const Text('LandTrackPK'),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _logout,
           ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _navIndex,
+        onTap: (i) => setState(() => _navIndex = i),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.onSurfaceVariant,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.map_outlined), activeIcon: Icon(Icons.map), label: 'Map'),
+          BottomNavigationBarItem(icon: Icon(Icons.verified_user_outlined), activeIcon: Icon(Icons.verified_user), label: 'Verify'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+      body: SafeArea(
+        child: IndexedStack(
+          index: _navIndex,
+          children: [
+            _buildHomeTab(),
+            _buildMapTab(),
+            _buildVerifyTab(),
+            _buildProfileTab(),
+          ],
         ),
       ),
     );

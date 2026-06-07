@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LandTrackPK - Fard Record</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700&amp;family=Source+Serif+4:wght@600;700&amp;family=Noto+Nastaliq+Urdu&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#c9a84c",
+                        "secondary-container": "#dfe0e0",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#616363",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#01411c",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1b1b",
+                        "on-primary-fixed-variant": "#17512a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed": "#ffe08f",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#503d00",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "outline": "#717970",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c0c9be",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-tint": "#326a40",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary-container": "#74ae7e",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#99d5a2",
+                        "secondary": "#5d5f5f",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f1bc",
+                        "primary": "#00290f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#414941",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "edge-margin": "20px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-sm": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"],
+                        "urdu": ["Noto Nastaliq Urdu", "serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; direction: rtl; }
+        .document-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-family: 'Source Serif 4';
+            font-weight: 700;
+            font-size: 80px;
+            color: rgba(186, 26, 26, 0.08);
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .guilloche-bg {
+            background-color: #fcf9f8;
+            background-image: radial-gradient(#dcd9d9 0.5px, transparent 0.5px);
+            background-size: 16px 16px;
+        }
+        .seal-stamp {
+            border: 4px double #755b00;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-12deg);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container min-h-screen pb-32">
+<!-- Top AppBar -->
+<header class="bg-surface flex justify-between items-center w-full px-edge-margin h-16 border-b border-outline-variant fixed top-0 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary font-headline-md text-headline-md" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">LandTrackPK</h1>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</header>
+<main class="pt-24 px-edge-margin max-w-4xl mx-auto">
+<!-- Header Actions -->
+<div class="flex justify-between items-end mb-lg">
+<div>
+<span class="font-label-bold text-label-bold text-secondary uppercase tracking-widest block mb-xs">Official Document</span>
+<h2 class="font-display-lg text-display-lg text-primary">Digitized Fard (Record of Rights)</h2>
+</div>
+<div class="hidden md:block">
+<div class="flex gap-sm">
+<button class="bg-surface border border-primary text-primary px-md py-sm font-label-bold text-label-bold flex items-center gap-xs hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">print</span> PRINT
+                    </button>
+<button class="bg-primary text-on-primary px-md py-sm font-label-bold text-label-bold flex items-center gap-xs hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">download</span> DOWNLOAD PDF
+                    </button>
+</div>
+</div>
+</div>
+<!-- Fard Certificate Card -->
+<div class="bg-surface-container-lowest border border-outline-variant relative overflow-hidden p-xl md:p-12 shadow-sm rounded-lg">
+<!-- Institutional Watermark -->
+<div class="document-watermark select-none">GOVT OF PAKISTAN</div>
+<div class="relative z-10">
+<!-- Certificate Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b-2 border-primary-container pb-lg mb-xl">
+<div class="flex items-center gap-md">
+<div class="w-16 h-16 bg-primary-container rounded-sm flex items-center justify-center p-2">
+<img alt="Seal" class="w-full h-full opacity-90 invert grayscale brightness-200" data-alt="A clean vector silhouette of the official State Emblem of Pakistan, featuring a crescent and star and a wreath, rendered in a crisp white on a dark forest green background to maintain governmental institutional authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdnCIXYQTMfbghNv9NwjlLdhFUzvQ1mj8Qwm1gSLHk_Ga6aDyFpvoNWyU_gyyo422-_-cYxcLL6N0WtVG8s645fLU1Bt2M9b-lAtXIpBgVnRE5dbZPS_Q1VCkf3fYBICssoHCJiTzx1X0ELBdZbUvjnff5kTV9dAFeDJHrrIjsYlIKhExZrI7h4HEIvYXBRsZcKeW1bLAEa1vBPdNIMy4CWJVxvGH4xKukcBkU-GIl1tR0-CxNvAs-nsCNInvwNPHQTRNvZ4-tyZw"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary uppercase">Board of Revenue</h3>
+<p class="font-label-sm text-label-sm text-on-surface-variant font-bold">Government of Punjab, Pakistan</p>
+</div>
+</div>
+<div class="mt-md md:mt-0 flex flex-col items-end">
+<div class="bg-tertiary-container/20 text-tertiary px-md py-xs border border-tertiary-container flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-bold text-label-bold uppercase">Verified Record</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Ref ID: LTP-99428-B</span>
+</div>
+</div>
+<!-- Locality Info -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg mb-xl bg-surface-container-low/50 p-md border border-outline-variant">
+<div>
+<span class="text-xs text-on-surface-variant uppercase font-bold block">District / ضلع</span>
+<div class="flex justify-between items-baseline">
+<span class="font-body-lg text-body-lg text-primary">Lahore</span>
+<span class="urdu-text text-sm">لاہور</span>
+</div>
+</div>
+<div>
+<span class="text-xs text-on-surface-variant uppercase font-bold block">Tehsil / تحصیل</span>
+<div class="flex justify-between items-baseline">
+<span class="font-body-lg text-body-lg text-primary">Cantt</span>
+<span class="urdu-text text-sm">کینٹ</span>
+</div>
+</div>
+<div>
+<span class="text-xs text-on-surface-variant uppercase font-bold block">Moza / موضع</span>
+<div class="flex justify-between items-baseline">
+<span class="font-body-lg text-body-lg text-primary">Mian Mir</span>
+<span class="urdu-text text-sm">میاں میر</span>
+</div>
+</div>
+<div>
+<span class="text-xs text-on-surface-variant uppercase font-bold block">Year / سال</span>
+<span class="font-body-lg text-body-lg text-primary">2023-2024</span>
+</div>
+</div>
+<!-- Land Details Table -->
+<div class="overflow-x-auto mb-xl">
+<table class="w-full text-left border-collapse border border-outline">
+<thead>
+<tr class="bg-primary text-on-primary">
+<th class="p-sm border border-outline font-label-bold text-label-bold uppercase">
+                                    Khasra No.<br/><span class="urdu-text font-normal normal-case">خسرہ نمبر</span>
+</th>
+<th class="p-sm border border-outline font-label-bold text-label-bold uppercase">
+                                    Khatauni No.<br/><span class="urdu-text font-normal normal-case">کھتونی نمبر</span>
+</th>
+<th class="p-sm border border-outline font-label-bold text-label-bold uppercase">
+                                    Owner Name<br/><span class="urdu-text font-normal normal-case">نام مالک</span>
+</th>
+<th class="p-sm border border-outline font-label-bold text-label-bold uppercase">
+                                    Area (K-M-F)<br/><span class="urdu-text font-normal normal-case">رقبہ</span>
+</th>
+</tr>
+</thead>
+<tbody class="text-on-surface">
+<tr class="hover:bg-surface-container transition-colors">
+<td class="p-md border border-outline font-body-lg text-body-lg">842/1</td>
+<td class="p-md border border-outline font-body-lg text-body-lg">114</td>
+<td class="p-md border border-outline">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Ahmed Ali Khan</span>
+<span class="urdu-text text-on-surface-variant">احمد علی خان</span>
+</div>
+</td>
+<td class="p-md border border-outline">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">02-14-00</span>
+<span class="text-xs text-on-surface-variant">2 Kanal, 14 Marla</span>
+</div>
+</td>
+</tr>
+<tr class="bg-surface-container-low/30 hover:bg-surface-container transition-colors">
+<td class="p-md border border-outline font-body-lg text-body-lg">842/2</td>
+<td class="p-md border border-outline font-body-lg text-body-lg">115</td>
+<td class="p-md border border-outline">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg font-bold">Fatima Bibi</span>
+<span class="urdu-text text-on-surface-variant">فاطمہ بی بی</span>
+</div>
+</td>
+<td class="p-md border border-outline">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">00-10-00</span>
+<span class="text-xs text-on-surface-variant">10 Marla</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer of Certificate -->
+<div class="flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="text-center md:text-left order-2 md:order-1">
+<p class="font-body-md text-body-md italic text-on-surface-variant mb-md">This is a computer-generated official record. Any tampering or unauthorized alteration is a punishable offense under the Land Revenue Act.</p>
+<div class="flex items-center gap-xl justify-center md:justify-start">
+<div class="flex flex-col items-center">
+<div class="w-24 h-24 seal-stamp mb-xs text-tertiary">
+<span class="material-symbols-outlined text-4xl">verified_user</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase">Official Stamp</span>
+</div>
+<div>
+<span class="block font-label-bold text-label-bold text-primary">Dated: 24 Oct 2023</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">Tehsildar Digital Signature Verified</span>
+</div>
+</div>
+</div>
+<div class="order-1 md:order-2 flex flex-col items-center bg-white p-sm border border-outline-variant shadow-inner">
+<img alt="Verification QR Code" class="w-32 h-32 mb-xs" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="font-label-sm text-label-sm uppercase text-secondary">Scan to Verify</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mobile Action Button (Floating on Mobile) -->
+<div class="md:hidden mt-xl">
+<button class="w-full bg-primary text-on-primary h-14 rounded-xl font-headline-sm text-headline-sm shadow-md flex items-center justify-center gap-sm Active:scale-95 transition-transform">
+<span class="material-symbols-outlined">download</span> Download Fard PDF
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Visible on Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-lg py-sm pb-safe bg-surface-container shadow-md border-t border-outline-variant rounded-t-xl">
+<button class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:w-1 after:h-1 after:bg-tertiary-container after:rounded-full after:mt-1 Active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-label-sm text-label-sm">Records</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-colors duration-200 p-xs rounded-lg">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-colors duration-200 p-xs rounded-lg">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="font-label-sm text-label-sm">Verify</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-colors duration-200 p-xs rounded-lg">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</button>
+</nav>
+<script>
+        // Simple interactive effect for document hover
+        const card = document.querySelector('.bg-surface-container-lowest');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+
+        // Tonal shifting on scroll for App Bar
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-sm');
+                header.classList.add('bg-surface-bright');
+            } else {
+                header.classList.remove('shadow-sm');
+                header.classList.remove('bg-surface-bright');
+            }
+        });
+    </script>
+</body></html>

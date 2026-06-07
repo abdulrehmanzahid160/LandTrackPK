@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import '../../models/transfer_request.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/certificate_card.dart';
 
 class ApproveTransfersScreen extends StatefulWidget {
   const ApproveTransfersScreen({super.key});
@@ -32,7 +34,7 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading transfers: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('Error loading transfers: $e'), backgroundColor: AppColors.error),
         );
       }
     }
@@ -47,7 +49,7 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Transfer approved for Plot: $plotNumber'),
-              backgroundColor: const Color(0xFF1A5C2A),
+              backgroundColor: AppColors.success,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -55,7 +57,7 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
         } else {
           setState(() => _isLoading = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(result['message'] ?? 'Error'), backgroundColor: Colors.red),
+            SnackBar(content: Text(result['message'] ?? 'Error'), backgroundColor: AppColors.error),
           );
         }
       }
@@ -63,7 +65,7 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error approving transfer: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('Error approving transfer: $e'), backgroundColor: AppColors.error),
         );
       }
     }
@@ -73,138 +75,123 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Approve Transfers (Intiqal)')),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _transfers.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.swap_horiz_rounded, size: 64, color: Colors.grey.shade300),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No pending transfers found',
-                        style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
-                      ),
-                    ],
-                  ),
-                )
-              : RefreshIndicator(
-                  onRefresh: _loadTransfers,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(20),
-                    itemCount: _transfers.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 12),
-                    itemBuilder: (context, index) {
-                      final t = _transfers[index];
-                      return Container(
-                        padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(14),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _transfers.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.swap_horiz_outlined, size: 64, color: AppColors.outline),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          'No pending transfers found',
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFE65100).withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Icon(
-                                    Icons.swap_horiz_rounded,
-                                    color: Color(0xFFE65100),
-                                    size: 20,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    t.plotNumber,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 16,
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _loadTransfers,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+                      itemCount: _transfers.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
+                      itemBuilder: (context, index) {
+                        final t = _transfers[index];
+                        return CertificateCard(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.errorContainer,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: const Icon(
+                                      Icons.swap_horiz_outlined,
+                                      color: AppColors.error,
+                                      size: 20,
                                     ),
                                   ),
-                                ),
-                                Text(
-                                  'Pending',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.orange.shade800,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(height: 24),
-                            _detailItem('From Owner', t.fromOwner),
-                            _detailItem('To Owner', t.toOwner),
-                            _detailItem('Reason', t.reason),
-                            _detailItem('Request Date', t.requestDate.split(' ').first),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Rejection requires review, coming soon.'),
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
-                                      );
-                                    },
-                                    style: OutlinedButton.styleFrom(
-                                      side: const BorderSide(color: Colors.red),
-                                      foregroundColor: Colors.red,
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                  const SizedBox(width: AppSpacing.md),
+                                  Expanded(
+                                    child: Text(
+                                      t.plotNumber,
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    child: const Text('REJECT'),
                                   ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () => _approve(t.transferId, t.plotNumber),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xFF1A5C2A),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.errorContainer,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Text(
+                                      'PENDING',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.error,
+                                        letterSpacing: 1,
                                       ),
                                     ),
-                                    child: const Text('APPROVE'),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                                ],
+                              ),
+                              const Divider(height: AppSpacing.xl),
+                              _detailItem('From Owner', t.fromOwner),
+                              _detailItem('To Owner', t.toOwner),
+                              _detailItem('Reason', t.reason),
+                              _detailItem('Request Date', t.requestDate.split(' ').first),
+                              const SizedBox(height: AppSpacing.lg),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Rejection requires review, coming soon.'),
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(color: AppColors.error),
+                                        foregroundColor: AppColors.error,
+                                      ),
+                                      child: const Text('REJECT'),
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.md),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () => _approve(t.transferId, t.plotNumber),
+                                      child: const Text('APPROVE'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
+      ),
     );
   }
 
   Widget _detailItem(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -212,9 +199,9 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
             width: 100,
             child: Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 13,
-                color: Colors.grey.shade500,
+                color: AppColors.onSurfaceVariant,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -224,8 +211,8 @@ class _ApproveTransfersScreenState extends State<ApproveTransfersScreen> {
               value,
               style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1B2A4A),
+                fontWeight: FontWeight.bold,
+                color: AppColors.onSurface,
               ),
             ),
           ),

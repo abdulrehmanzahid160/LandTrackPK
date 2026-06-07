@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | LandTrackPK</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#c9a84c",
+                        "secondary-container": "#dfe0e0",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#616363",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#01411c",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1b1b",
+                        "on-primary-fixed-variant": "#17512a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed": "#ffe08f",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#503d00",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "outline": "#717970",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c0c9be",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-tint": "#326a40",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary-container": "#74ae7e",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#99d5a2",
+                        "secondary": "#5d5f5f",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f1bc",
+                        "primary": "#00290f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#414941",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "edge-margin": "20px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-sm": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .watermark-bg {
+            background-color: #fcf9f8;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l2.5 10 7.5 2.5-7.5 2.5L30 25l-2.5-10-7.5-2.5 7.5-2.5z' fill='%2301411c' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .guilloche-border {
+            border-image: repeating-linear-gradient(45deg, #01411c, #01411c 1px, transparent 1px, transparent 5px) 1;
+        }
+        
+        .role-toggle input:checked + label {
+            background-color: #01411c;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .input-focus-ring:focus {
+            outline: none;
+            border-color: #01411c;
+            box-shadow: 0 0 0 1px #01411c;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md watermark-bg">
+<!-- Top App Bar (Shell Suppression Rule: Login is transactional, but branding requires the identity header) -->
+<header class="flex justify-between items-center w-full px-edge-margin h-16 bg-surface border-b border-outline-variant z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="account_balance">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-sm">
+<img alt="Pakistan Flag" class="h-6 w-auto shadow-sm border border-outline-variant" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<span class="hidden md:block font-label-bold text-label-bold text-on-surface-variant">MINISTRY OF LAND REVENUE</span>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center p-edge-margin py-xl">
+<div class="w-full max-w-[420px] bg-white border border-outline-variant rounded-lg shadow-[0_4px_20px_rgba(0,0,0,0.05)] overflow-hidden relative">
+<!-- Document Header -->
+<div class="h-2 bg-primary-container w-full"></div>
+<div class="p-lg pb-0 flex flex-col items-center text-center">
+<div class="mb-md">
+<div class="w-16 h-16 rounded-full border-2 border-primary flex items-center justify-center bg-surface-container-low">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="security">security</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-primary mb-xs">Secure Access Portal</h2>
+<p class="font-label-bold text-label-bold text-tertiary-container tracking-widest border-y border-outline-variant py-1 px-4 mb-md">GOVERNMENT OF PAKISTAN</p>
+</div>
+<!-- Login Form -->
+<form action="#" class="p-lg pt-md space-y-lg" onsubmit="return false;">
+<!-- Role Toggle -->
+<div class="flex p-1 bg-surface-container rounded-lg role-toggle">
+<div class="flex-1">
+<input checked="" class="hidden" id="citizen" name="role" type="radio"/>
+<label class="flex flex-col items-center justify-center py-sm rounded cursor-pointer transition-all duration-200 text-on-surface-variant" for="citizen">
+<span class="font-label-bold text-label-bold">CITIZEN</span>
+<span class="text-[10px] opacity-70">شہری</span>
+</label>
+</div>
+<div class="flex-1">
+<input class="hidden" id="officer" name="role" type="radio"/>
+<label class="flex flex-col items-center justify-center py-sm rounded cursor-pointer transition-all duration-200 text-on-surface-variant" for="officer">
+<span class="font-label-bold text-label-bold">OFFICER</span>
+<span class="text-[10px] opacity-70">افسر</span>
+</label>
+</div>
+</div>
+<!-- CNIC Field -->
+<div class="space-y-xs">
+<div class="flex justify-between items-baseline">
+<label class="font-label-bold text-label-bold text-on-surface" for="cnic">CNIC NUMBER</label>
+<span class="text-[11px] font-medium text-on-surface-variant">شناختی کارڈ نمبر</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="badge">badge</span>
+<input class="w-full pl-10 pr-md py-3 bg-surface-bright border border-outline rounded shadow-sm input-focus-ring font-body-md" id="cnic" maxlength="15" placeholder="00000-0000000-0" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-xs">
+<div class="flex justify-between items-baseline">
+<label class="font-label-bold text-label-bold text-on-surface" for="password">PASSWORD</label>
+<span class="text-[11px] font-medium text-on-surface-variant">پاس ورڈ</span>
+</div>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline" data-icon="lock">lock</span>
+<input class="w-full pl-10 pr-md py-3 bg-surface-bright border border-outline rounded shadow-sm input-focus-ring font-body-md" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-md space-y-md">
+<button class="w-full bg-primary-container text-white py-4 rounded font-label-bold text-lg flex items-center justify-center gap-sm border border-tertiary-container shadow-md active:scale-[0.98] transition-transform duration-150" type="submit">
+<span class="tracking-widest">LOGIN TO SYSTEM</span>
+<span class="material-symbols-outlined" data-icon="login">login</span>
+</button>
+<div class="flex items-center justify-between">
+<a class="text-primary font-label-bold text-label-sm hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help">help</span>
+                            Forgot Access Code?
+                        </a>
+<a class="text-on-surface-variant font-label-bold text-label-sm hover:text-primary transition-colors" href="#">
+                            Request Account
+                        </a>
+</div>
+</div>
+</form>
+<!-- Institutional Footer -->
+<div class="bg-surface-container-high p-md text-center border-t border-outline-variant">
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest leading-relaxed">
+                    This is a secure government system.<br/>
+                    Unauthorized access is strictly prohibited and monitored.<br/>
+                    © 2024 Land Revenue Department
+                </p>
+</div>
+<!-- Subtle Guilloche Decoration -->
+<div class="absolute bottom-0 left-0 right-0 h-1 opacity-20" style="background: repeating-linear-gradient(90deg, #c9a84c, #c9a84c 4px, transparent 4px, transparent 8px);"></div>
+</div>
+</main>
+<!-- Page Decoration - Bottom Watermark -->
+<div class="fixed bottom-lg right-lg opacity-10 pointer-events-none hidden md:block">
+<span class="material-symbols-outlined text-[120px]" data-icon="gavel" style="font-variation-settings: 'wght' 100;">gavel</span>
+</div>
+<script>
+        // CNIC Formatter
+        document.getElementById('cnic')?.addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,5})(\d{0,7})(\d{0,1})/);
+            e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+
+        // Toggle micro-interaction
+        const labels = document.querySelectorAll('.role-toggle label');
+        labels.forEach(label => {
+            label.addEventListener('click', () => {
+                // Add a small scale effect on click
+                label.style.transform = 'scale(0.95)';
+                setTimeout(() => label.style.transform = 'scale(1)', 100);
+            });
+        });
+    </script>
+</body></html>

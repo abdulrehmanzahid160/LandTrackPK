@@ -6,10 +6,11 @@ class ApiService {
   // ─── AUTH ──────────────────────────────────────────────
   static Future<Map<String, dynamic>> login(
       String cnic, String password, String role) async {
+    final cleanCnic = cnic.replaceAll(RegExp(r'\D'), '');
     final response = await http.post(
       Uri.parse('$baseUrl/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'cnic': cnic, 'password': password, 'role': role}),
+      body: jsonEncode({'cnic': cleanCnic, 'password': password, 'role': role}),
     );
     return jsonDecode(response.body);
   }
@@ -25,12 +26,13 @@ class ApiService {
     required String password,
     required String role,
   }) async {
+    final cleanCnic = cnic.replaceAll(RegExp(r'\D'), '');
     final response = await http.post(
       Uri.parse('$baseUrl/add-citizen'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'full_name': fullName,
-        'cnic': cnic,
+        'cnic': cleanCnic,
         'phone': phone,
         'street': street,
         'city': city,
@@ -60,6 +62,7 @@ class ApiService {
     required String tehsil,
     required String ownerCnic,
   }) async {
+    final cleanCnic = ownerCnic.replaceAll(RegExp(r'\D'), '');
     final response = await http.post(
       Uri.parse('$baseUrl/register-land'),
       headers: {'Content-Type': 'application/json'},
@@ -70,7 +73,7 @@ class ApiService {
         'land_type': landType,
         'district': district,
         'tehsil': tehsil,
-        'owner_cnic': ownerCnic,
+        'owner_cnic': cleanCnic,
       }),
     );
     return jsonDecode(response.body);
@@ -78,8 +81,9 @@ class ApiService {
 
   // ─── CITIZEN ───────────────────────────────────────────
   static Future<Map<String, dynamic>> getCitizen(String cnic) async {
+    final cleanCnic = cnic.replaceAll(RegExp(r'\D'), '');
     final response = await http.get(
-      Uri.parse('$baseUrl/citizen/$cnic'),
+      Uri.parse('$baseUrl/citizen/$cleanCnic'),
     );
     return jsonDecode(response.body);
   }
@@ -91,13 +95,15 @@ class ApiService {
     required String toCnic,
     required String reason,
   }) async {
+    final cleanFromCnic = fromCnic.replaceAll(RegExp(r'\D'), '');
+    final cleanToCnic = toCnic.replaceAll(RegExp(r'\D'), '');
     final response = await http.post(
       Uri.parse('$baseUrl/transfer-request'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'plot_number': plotNumber,
-        'from_cnic': fromCnic,
-        'to_cnic': toCnic,
+        'from_cnic': cleanFromCnic,
+        'to_cnic': cleanToCnic,
         'reason': reason,
       }),
     );
@@ -123,6 +129,23 @@ class ApiService {
   static Future<List<dynamic>> getDisputes() async {
     final response = await http.get(
       Uri.parse('$baseUrl/disputes'),
+    );
+    return jsonDecode(response.body);
+  }
+
+  static Future<Map<String, dynamic>> createDispute({
+    required int citizenId,
+    required String plotNumber,
+    required String description,
+  }) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/dispute/create'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'citizen_id': citizenId,
+        'plot_number': plotNumber,
+        'description': description,
+      }),
     );
     return jsonDecode(response.body);
   }
@@ -233,6 +256,22 @@ class ApiService {
         'comment_text': commentText,
       }),
     );
+    return jsonDecode(response.body);
+  }
+
+  // --- ADMIN / OFFICER ACTIONS ---------------------------
+  static Future<List<dynamic>> getAllCitizens() async {
+    final response = await http.get(Uri.parse('$baseUrl/citizens'));
+    return jsonDecode(response.body);
+  }
+
+  static Future<Map<String, dynamic>> removeCitizen(int citizenId) async {
+    final response = await http.delete(Uri.parse('$baseUrl/citizen/$citizenId'));
+    return jsonDecode(response.body);
+  }
+
+  static Future<Map<String, dynamic>> resolveDispute(int disputeId) async {
+    final response = await http.post(Uri.parse('$baseUrl/dispute/resolve/$disputeId'));
     return jsonDecode(response.body);
   }
 }

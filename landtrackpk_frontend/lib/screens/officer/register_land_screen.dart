@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/certificate_card.dart';
+import '../../widgets/bilingual_label.dart';
 
 class RegisterLandScreen extends StatefulWidget {
   const RegisterLandScreen({super.key});
@@ -54,7 +57,7 @@ class _RegisterLandScreenState extends State<RegisterLandScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${result['message']} (Plot: ${_plotNumberController.text.trim()})'),
-            backgroundColor: const Color(0xFF1A5C2A),
+            backgroundColor: AppColors.success,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -63,7 +66,7 @@ class _RegisterLandScreenState extends State<RegisterLandScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['message'] ?? 'Registration failed'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -73,7 +76,7 @@ class _RegisterLandScreenState extends State<RegisterLandScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -87,190 +90,158 @@ class _RegisterLandScreenState extends State<RegisterLandScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Register Land')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Land Registry Information',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1B2A4A),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.edgeMargin),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CertificateCard(
+                  hasGuilloche: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const BilingualLabel(englishText: 'LAND REGISTRY INFORMATION', urduText: 'اراضی کی معلومات'),
+                      const Divider(color: AppColors.tertiary),
+                      const SizedBox(height: AppSpacing.md),
 
-                    // Plot Number
-                    TextFormField(
-                      controller: _plotNumberController,
-                      decoration: const InputDecoration(
-                        labelText: 'Plot Number',
-                        hintText: 'e.g. LHR-2024-001',
-                        prefixIcon: Icon(Icons.tag_rounded),
-                      ),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Plot Number is required'
-                          : null,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Area & Unit Row
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: TextFormField(
-                            controller: _areaController,
-                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                            decoration: const InputDecoration(
-                              labelText: 'Area',
-                              prefixIcon: Icon(Icons.straighten_rounded),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Required';
-                              }
-                              if (double.tryParse(value) == null) {
-                                return 'Invalid number';
-                              }
-                              return null;
-                            },
-                          ),
+                      // Plot Number
+                      TextFormField(
+                        controller: _plotNumberController,
+                        decoration: const InputDecoration(
+                          labelText: 'Plot Number',
+                          hintText: 'e.g. LHR-2024-001',
+                          prefixIcon: Icon(Icons.tag_outlined),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            value: _selectedAreaUnit,
-                            decoration: const InputDecoration(
-                              labelText: 'Unit',
+                        validator: (value) => (value == null || value.isEmpty)
+                            ? 'Plot Number is required'
+                            : null,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+
+                      // Area & Unit Row
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              controller: _areaController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              decoration: const InputDecoration(
+                                labelText: 'Area',
+                                prefixIcon: Icon(Icons.straighten_outlined),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) return 'Required';
+                                if (double.tryParse(value) == null) return 'Invalid number';
+                                return null;
+                              },
                             ),
-                            items: const [
-                              DropdownMenuItem(value: 'Marla', child: Text('Marla')),
-                              DropdownMenuItem(value: 'Kanal', child: Text('Kanal')),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() => _selectedAreaUnit = value);
-                              }
-                            },
                           ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              value: _selectedAreaUnit,
+                              decoration: const InputDecoration(labelText: 'Unit'),
+                              items: const [
+                                DropdownMenuItem(value: 'Marla', child: Text('Marla')),
+                                DropdownMenuItem(value: 'Kanal', child: Text('Kanal')),
+                              ],
+                              onChanged: (value) {
+                                if (value != null) setState(() => _selectedAreaUnit = value);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+
+                      // Land Type Dropdown
+                      DropdownButtonFormField<String>(
+                        value: _selectedLandType,
+                        decoration: const InputDecoration(
+                          labelText: 'Land Type',
+                          prefixIcon: Icon(Icons.category_outlined),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Land Type Dropdown
-                    DropdownButtonFormField<String>(
-                      value: _selectedLandType,
-                      decoration: const InputDecoration(
-                        labelText: 'Land Type',
-                        prefixIcon: Icon(Icons.category_rounded),
+                        items: const [
+                          DropdownMenuItem(value: 'Agricultural', child: Text('Agricultural')),
+                          DropdownMenuItem(value: 'Residential', child: Text('Residential')),
+                          DropdownMenuItem(value: 'Commercial', child: Text('Commercial')),
+                        ],
+                        onChanged: (value) {
+                          if (value != null) setState(() => _selectedLandType = value);
+                        },
                       ),
-                      items: const [
-                        DropdownMenuItem(value: 'Agricultural', child: Text('Agricultural')),
-                        DropdownMenuItem(value: 'Residential', child: Text('Residential')),
-                        DropdownMenuItem(value: 'Commercial', child: Text('Commercial')),
-                      ],
-                      onChanged: (value) {
-                        if (value != null) {
-                          setState(() => _selectedLandType = value);
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
 
-                    // District
-                    TextFormField(
-                      controller: _districtController,
-                      decoration: const InputDecoration(
-                        labelText: 'District',
-                        hintText: 'e.g. Lahore',
-                        prefixIcon: Icon(Icons.location_city_rounded),
+                      // District
+                      TextFormField(
+                        controller: _districtController,
+                        decoration: const InputDecoration(
+                          labelText: 'District',
+                          hintText: 'e.g. Lahore',
+                          prefixIcon: Icon(Icons.location_city_outlined),
+                        ),
+                        validator: (value) => (value == null || value.isEmpty)
+                            ? 'District is required'
+                            : null,
                       ),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'District is required'
-                          : null,
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
 
-                    // Tehsil
-                    TextFormField(
-                      controller: _tehsilController,
-                      decoration: const InputDecoration(
-                        labelText: 'Tehsil',
-                        hintText: 'e.g. Shalimar',
-                        prefixIcon: Icon(Icons.map_rounded),
+                      // Tehsil
+                      TextFormField(
+                        controller: _tehsilController,
+                        decoration: const InputDecoration(
+                          labelText: 'Tehsil',
+                          hintText: 'e.g. Shalimar',
+                          prefixIcon: Icon(Icons.map_outlined),
+                        ),
+                        validator: (value) => (value == null || value.isEmpty)
+                            ? 'Tehsil is required'
+                            : null,
                       ),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Tehsil is required'
-                          : null,
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.md),
 
-                    // Owner CNIC
-                    TextFormField(
-                      controller: _ownerCnicController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 13,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        labelText: 'Owner CNIC',
-                        hintText: '13-digit CNIC of active owner',
-                        prefixIcon: Icon(Icons.person_rounded),
-                        counterText: '',
+                      // Owner CNIC
+                      TextFormField(
+                        controller: _ownerCnicController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 13,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        decoration: const InputDecoration(
+                          labelText: 'Owner CNIC',
+                          hintText: '13-digit CNIC of active owner',
+                          prefixIcon: Icon(Icons.person_outlined),
+                          counterText: '',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) return 'Owner CNIC is required';
+                          if (value.length != 13) return 'CNIC must be exactly 13 digits';
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Owner CNIC is required';
-                        }
-                        if (value.length != 13) {
-                          return 'CNIC must be exactly 13 digits';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text('REGISTER LAND'),
+                const SizedBox(height: AppSpacing.xl),
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submit,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.onPrimary),
+                          )
+                        : const Text('REGISTER LAND'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

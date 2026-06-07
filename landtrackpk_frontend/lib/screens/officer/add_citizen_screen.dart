@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/certificate_card.dart';
 
 class AddCitizenScreen extends StatefulWidget {
   const AddCitizenScreen({super.key});
@@ -60,7 +62,7 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Citizen registered successfully! ID: ${result['citizen_id']}'),
-            backgroundColor: const Color(0xFF1A5C2A),
+            backgroundColor: AppColors.success,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -69,7 +71,7 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['message'] ?? 'Failed to add citizen'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -79,7 +81,7 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -94,25 +96,13 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Add Citizen Profile')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.edgeMargin),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
+              CertificateCard(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -121,23 +111,24 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1B2A4A),
+                        color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const Divider(),
+                    const SizedBox(height: AppSpacing.md),
 
                     // Full Name
                     TextFormField(
                       controller: _fullNameController,
                       decoration: const InputDecoration(
                         labelText: 'Full Name',
-                        prefixIcon: Icon(Icons.person_rounded),
+                        prefixIcon: Icon(Icons.person_outline),
                       ),
                       validator: (value) => (value == null || value.isEmpty)
                           ? 'Full Name is required'
                           : null,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
 
                     // CNIC
                     TextFormField(
@@ -148,20 +139,16 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                       decoration: const InputDecoration(
                         labelText: 'CNIC',
                         hintText: '13-digit CNIC number',
-                        prefixIcon: Icon(Icons.credit_card_rounded),
+                        prefixIcon: Icon(Icons.credit_card_outlined),
                         counterText: '',
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'CNIC is required';
-                        }
-                        if (value.length != 13) {
-                          return 'CNIC must be exactly 13 digits';
-                        }
+                        if (value == null || value.isEmpty) return 'CNIC is required';
+                        if (value.length != 13) return 'CNIC must be exactly 13 digits';
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
 
                     // Phone
                     TextFormField(
@@ -170,36 +157,37 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                       decoration: const InputDecoration(
                         labelText: 'Phone Number',
                         hintText: 'e.g. 03211234567',
-                        prefixIcon: Icon(Icons.phone_rounded),
+                        prefixIcon: Icon(Icons.phone_outlined),
                       ),
                       validator: (value) => (value == null || value.isEmpty)
                           ? 'Phone number is required'
                           : null,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.xl),
 
                     const Text(
                       'Address Details',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1B2A4A),
+                        color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    const Divider(),
+                    const SizedBox(height: AppSpacing.md),
 
                     // Street
                     TextFormField(
                       controller: _streetController,
                       decoration: const InputDecoration(
                         labelText: 'Street Address',
-                        prefixIcon: Icon(Icons.home_rounded),
+                        prefixIcon: Icon(Icons.home_outlined),
                       ),
                       validator: (value) => (value == null || value.isEmpty)
                           ? 'Street address is required'
                           : null,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
 
                     // City & Postal Code Row
                     Row(
@@ -209,20 +197,20 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                             controller: _cityController,
                             decoration: const InputDecoration(
                               labelText: 'City',
-                              prefixIcon: Icon(Icons.location_city_rounded),
+                              prefixIcon: Icon(Icons.location_city_outlined),
                             ),
                             validator: (value) => (value == null || value.isEmpty)
                                 ? 'City is required'
                                 : null,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: TextFormField(
                             controller: _postalCodeController,
                             decoration: const InputDecoration(
                               labelText: 'Postal Code',
-                              prefixIcon: Icon(Icons.markunread_mailbox_rounded),
+                              prefixIcon: Icon(Icons.markunread_mailbox_outlined),
                             ),
                             validator: (value) => (value == null || value.isEmpty)
                                 ? 'Postal code is required'
@@ -231,50 +219,51 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
 
                     // District
                     TextFormField(
                       controller: _districtController,
                       decoration: const InputDecoration(
                         labelText: 'District',
-                        prefixIcon: Icon(Icons.map_rounded),
+                        prefixIcon: Icon(Icons.map_outlined),
                       ),
                       validator: (value) => (value == null || value.isEmpty)
                           ? 'District is required'
                           : null,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSpacing.xl),
 
                     const Text(
                       'Security & Role',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1B2A4A),
+                        color: AppColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 14),
+                    const Divider(),
+                    const SizedBox(height: AppSpacing.md),
 
                     // Password
                     TextFormField(
                       controller: _passwordController,
                       decoration: const InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock_rounded),
+                        prefixIcon: Icon(Icons.lock_outline),
                       ),
                       validator: (value) => (value == null || value.isEmpty)
                           ? 'Password is required'
                           : null,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSpacing.md),
 
                     // Role Dropdown
                     DropdownButtonFormField<String>(
                       value: _selectedRole,
                       decoration: const InputDecoration(
                         labelText: 'Role',
-                        prefixIcon: Icon(Icons.supervised_user_circle_rounded),
+                        prefixIcon: Icon(Icons.supervised_user_circle_outlined),
                       ),
                       items: const [
                         DropdownMenuItem(value: 'Citizen', child: Text('Citizen')),
@@ -289,7 +278,7 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xl),
               SizedBox(
                 height: 52,
                 child: ElevatedButton(
@@ -298,10 +287,7 @@ class _AddCitizenScreenState extends State<AddCitizenScreen> {
                       ? const SizedBox(
                           width: 22,
                           height: 22,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            color: Colors.white,
-                          ),
+                          child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.onPrimary),
                         )
                       : const Text('CREATE PROFILE'),
                 ),

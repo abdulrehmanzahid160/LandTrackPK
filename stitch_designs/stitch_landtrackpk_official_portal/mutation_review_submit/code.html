@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LandTrackPK - Review &amp; Submit Mutation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#e6c364",
+                    "on-tertiary": "#ffffff",
+                    "inverse-on-surface": "#f3f0ef",
+                    "error-container": "#ffdad6",
+                    "secondary": "#5d5f5f",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#f6f3f2",
+                    "tertiary-container": "#c9a84c",
+                    "on-surface": "#1b1b1b",
+                    "on-secondary-fixed": "#1a1c1c",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-background": "#1b1b1b",
+                    "surface": "#fcf9f8",
+                    "on-tertiary-fixed-variant": "#584400",
+                    "on-primary-fixed-variant": "#17512a",
+                    "secondary-fixed": "#e2e2e2",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#fcf9f8",
+                    "background": "#fcf9f8",
+                    "surface-container-highest": "#e5e2e1",
+                    "surface-dim": "#dcd9d9",
+                    "primary-container": "#01411c",
+                    "on-primary-fixed": "#00210b",
+                    "outline-variant": "#c0c9be",
+                    "on-secondary-container": "#616363",
+                    "surface-container-lowest": "#ffffff",
+                    "outline": "#717970",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#74ae7e",
+                    "primary": "#00290f",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#eae7e7",
+                    "tertiary": "#755b00",
+                    "surface-variant": "#e5e2e1",
+                    "tertiary-fixed": "#ffe08f",
+                    "primary-fixed": "#b4f1bc",
+                    "secondary-fixed-dim": "#c6c6c7",
+                    "secondary-container": "#dfe0e0",
+                    "primary-fixed-dim": "#99d5a2",
+                    "surface-tint": "#326a40",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-container": "#503d00",
+                    "inverse-primary": "#99d5a2",
+                    "on-surface-variant": "#414941",
+                    "on-secondary-fixed-variant": "#454747",
+                    "surface-container": "#f0eded",
+                    "inverse-surface": "#313030"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "xl": "32px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "base": "4px",
+                    "gutter": "12px",
+                    "edge-margin": "20px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Public Sans"],
+                    "headline-sm": ["Source Serif 4"],
+                    "label-bold": ["Public Sans"],
+                    "display-lg": ["Source Serif 4"],
+                    "headline-md": ["Source Serif 4"],
+                    "body-md": ["Public Sans"],
+                    "body-lg": ["Public Sans"]
+            },
+            "fontSize": {
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #fcf9f8; position: relative; overflow-x: hidden; }
+        .watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            opacity: 0.03;
+            font-size: 20rem;
+            z-index: -1;
+            pointer-events: none;
+            font-family: 'Source Serif 4';
+        }
+        .guilloche-pattern {
+            background-image: radial-gradient(circle at 2px 2px, #01411c 1px, transparent 0);
+            background-size: 24px 24px;
+            opacity: 0.05;
+        }
+        .seal-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #01411C;
+        }
+        .seal-button::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 1px dashed #ffffff;
+            opacity: 0.3;
+            border-radius: inherit;
+        }
+        .certificate-card {
+            border-left: 4px solid #755b00;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .stamp-badge {
+            border: 2px double currentColor;
+            padding: 2px 8px;
+            text-transform: uppercase;
+            font-weight: 800;
+            transform: rotate(-5deg);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-surface">
+<div class="watermark material-symbols-outlined">account_balance</div>
+<header class="bg-surface sticky top-0 z-40 border-b border-outline-variant flex justify-between items-center w-full px-edge-margin py-md">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary text-headline-md">account_balance</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="text-label-bold font-label-bold text-primary px-3 py-1 bg-primary-fixed rounded-full">Verified Citizen</span>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-edge-margin py-xl pb-32">
+<section class="mb-xl">
+<h2 class="text-display-lg font-display-lg text-primary mb-md">Review Mutation Request</h2>
+<p class="text-body-lg text-on-surface-variant">Please verify the accuracy of the land transfer details below. Once submitted, this request will enter the official revenue record verification queue.</p>
+</section>
+<!-- Stepper -->
+<div class="flex items-center justify-between mb-xl px-md">
+<div class="flex flex-col items-center gap-xs flex-1 opacity-50">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</div>
+<span class="text-label-sm font-label-sm">Parties</span>
+</div>
+<div class="h-[2px] bg-outline-variant flex-1 mb-5"></div>
+<div class="flex flex-col items-center gap-xs flex-1 opacity-50">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">2</div>
+<span class="text-label-sm font-label-sm">Land Detail</span>
+</div>
+<div class="h-[2px] bg-outline-variant flex-1 mb-5"></div>
+<div class="flex flex-col items-center gap-xs flex-1 opacity-50">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">3</div>
+<span class="text-label-sm font-label-sm">Uploads</span>
+</div>
+<div class="h-[2px] bg-outline-variant flex-1 mb-5"></div>
+<div class="flex flex-col items-center gap-xs flex-1">
+<div class="w-10 h-10 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center font-bold shadow-lg ring-4 ring-tertiary-fixed">4</div>
+<span class="text-label-bold font-label-bold text-tertiary">Review</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
+<!-- Information Grid -->
+<div class="md:col-span-2 space-y-lg">
+<!-- Party Info -->
+<article class="certificate-card bg-surface-container-lowest p-lg rounded-lg border border-outline-variant relative overflow-hidden">
+<div class="guilloche-pattern absolute inset-0 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-md">
+<h3 class="text-headline-sm font-headline-sm text-primary">Transfer Parties</h3>
+<button class="text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="text-label-bold font-label-bold">Edit</span>
+</button>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Seller (Transferor)</p>
+<p class="font-bold text-on-surface">Ahmed Khan Niazi</p>
+<p class="text-body-md text-on-surface-variant">CNIC: 35201-XXXXXXX-1</p>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-on-surface-variant mb-1">Buyer (Transferee)</p>
+<p class="font-bold text-on-surface">Fatima Siddiqui</p>
+<p class="text-body-md text-on-surface-variant">CNIC: 42101-XXXXXXX-2</p>
+</div>
+</div>
+</article>
+<!-- Land Details -->
+<article class="certificate-card bg-surface-container-lowest p-lg rounded-lg border border-outline-variant relative">
+<div class="flex justify-between items-start mb-md">
+<h3 class="text-headline-sm font-headline-sm text-primary">Property Information</h3>
+<button class="text-primary hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="text-label-bold font-label-bold">Edit</span>
+</button>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">District</span>
+<span class="font-bold">Lahore</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Tehsil</span>
+<span class="font-bold">Model Town</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Mauza / Village</span>
+<span class="font-bold">Ichhra</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Khewat / Khatooni</span>
+<span class="font-bold">442 / 819</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Transferred Area</span>
+<span class="font-bold">10 Marla (Residential)</span>
+</div>
+</div>
+</article>
+<!-- Documents Section -->
+<article class="bg-surface-container p-lg rounded-lg border border-outline-variant">
+<h3 class="text-headline-sm font-headline-sm text-primary mb-md">Verified Documents</h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="flex items-center gap-md p-md bg-surface-container-lowest rounded border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[32px]">description</span>
+<div class="overflow-hidden">
+<p class="font-bold text-label-bold truncate">Registry_Copy_Final.pdf</p>
+<p class="text-label-sm text-on-surface-variant">2.4 MB • Legal Deed</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md bg-surface-container-lowest rounded border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-[32px]">fingerprint</span>
+<div class="overflow-hidden">
+<p class="font-bold text-label-bold truncate">Biometric_Receipt.jpg</p>
+<p class="text-label-sm text-on-surface-variant">800 KB • Verified</p>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Sidebar Action Area -->
+<div class="space-y-lg">
+<div class="sticky top-24">
+<div class="bg-surface-container-high p-lg rounded-xl border-2 border-primary-container relative overflow-hidden">
+<div class="absolute top-4 right-4 text-tertiary stamp-badge text-label-bold opacity-50">Draft</div>
+<h4 class="text-label-bold font-label-bold text-primary mb-sm uppercase tracking-widest">Mutation Fee Summary</h4>
+<div class="space-y-md mb-lg">
+<div class="flex justify-between text-body-md">
+<span>Govt. Registry Fee</span>
+<span class="font-bold">PKR 15,200</span>
+</div>
+<div class="flex justify-between text-body-md">
+<span>Service Charges</span>
+<span class="font-bold">PKR 500</span>
+</div>
+<div class="h-[1px] bg-outline"></div>
+<div class="flex justify-between text-headline-sm text-primary">
+<span class="font-headline-sm">Total Due</span>
+<span class="font-headline-sm">PKR 15,700</span>
+</div>
+</div>
+<div class="flex items-start gap-sm mb-lg">
+<input class="mt-1 rounded border-outline text-primary focus:ring-primary-container" id="declaration" type="checkbox"/>
+<label class="text-label-sm text-on-surface-variant leading-tight" for="declaration">
+                                I hereby declare that the information provided is true to the best of my knowledge under the Land Revenue Act.
+                            </label>
+</div>
+<button class="seal-button w-full py-4 bg-primary text-on-primary rounded-lg font-bold text-label-bold flex items-center justify-center gap-md shadow-xl hover:bg-primary-container transform active:scale-95 transition-all" id="submitBtn">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+                            SUBMIT MUTATION REQUEST
+                        </button>
+</div>
+<div class="mt-md p-md bg-error-container text-on-error-container rounded-lg flex items-start gap-sm">
+<span class="material-symbols-outlined">warning</span>
+<p class="text-label-sm">Once submitted, modifications require an official appeal at the Tehsil office.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface border-t border-outline-variant shadow-lg rounded-t-full">
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-sm font-label-sm">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-label-sm font-label-sm">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold border-b-2 border-tertiary-fixed pb-1 py-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-label-sm font-label-sm">Verify</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant py-1" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</a>
+</nav>
+<!-- Desktop Navigation (Top Bar Extension) -->
+<div class="hidden md:flex fixed top-0 right-edge-margin h-[72px] items-center gap-xl z-50 pointer-events-none">
+<div class="flex items-center gap-lg pointer-events-auto">
+<a class="text-on-surface-variant hover:text-primary text-label-bold transition-colors" href="#">Records</a>
+<a class="text-on-surface-variant hover:text-primary text-label-bold transition-colors" href="#">Map</a>
+<a class="text-primary font-bold text-label-bold transition-colors border-b-2 border-tertiary-fixed" href="#">Verify</a>
+<a class="text-on-surface-variant hover:text-primary text-label-bold transition-colors" href="#">Profile</a>
+</div>
+</div>
+<!-- Submission Modal (Hidden by default) -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-md bg-primary/20 backdrop-blur-sm hidden" id="successModal">
+<div class="bg-surface-container-lowest max-w-sm w-full p-xl rounded-2xl shadow-2xl text-center border-4 border-primary relative overflow-hidden">
+<div class="guilloche-pattern absolute inset-0 opacity-10 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="w-20 h-20 bg-primary text-on-primary rounded-full flex items-center justify-center mx-auto mb-md shadow-lg">
+<span class="material-symbols-outlined text-[48px]">check_circle</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-primary mb-sm">Request Submitted</h3>
+<p class="text-body-md text-on-surface-variant mb-xl">Your mutation request has been registered with ID: <span class="font-bold text-on-surface">MUT-2023-8812</span>. A physical verification appointment will be shared via SMS.</p>
+<button class="w-full py-3 bg-secondary text-on-secondary rounded font-bold text-label-bold hover:bg-on-surface transition-all" onclick="window.location.reload()">
+                    GO TO DASHBOARD
+                </button>
+</div>
+</div>
+</div>
+<script>
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const checkbox = document.getElementById('declaration');
+            if (!checkbox.checked) {
+                alert('Please accept the declaration to proceed.');
+                checkbox.focus();
+                return;
+            }
+            
+            // Interaction effect
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> PROCESSING...';
+                this.disabled = true;
+                
+                // Simulate network
+                setTimeout(() => {
+                    document.getElementById('successModal').classList.remove('hidden');
+                }, 1500);
+            }, 150);
+        });
+
+        // Add some micro-hover effects for cards
+        document.querySelectorAll('.certificate-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'transform 0.2s ease-out';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

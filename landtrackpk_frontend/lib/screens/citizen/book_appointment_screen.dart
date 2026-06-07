@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
+import '../../theme/app_theme.dart';
+import '../../widgets/bilingual_label.dart';
+import '../../widgets/certificate_card.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
   final int citizenId;
@@ -56,7 +59,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
           colorScheme: const ColorScheme.light(
-            primary: Color(0xFF1A5C2A),
+            primary: AppColors.primary,
           ),
         ),
         child: child!,
@@ -86,14 +89,14 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['message'] ?? 'Error'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.error,
           ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+          SnackBar(content: Text('Error: $e'), backgroundColor: AppColors.error),
         );
       }
     } finally {
@@ -106,48 +109,47 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.md),
               decoration: BoxDecoration(
-                color: const Color(0xFF1A5C2A).withOpacity(0.1),
+                color: AppColors.success.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle_rounded,
-                  color: Color(0xFF1A5C2A), size: 48),
+              child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 48),
             ),
-            const SizedBox(height: 16),
-            const Text('Appointment Booked!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-            const SizedBox(height: 8),
-            Text('Your Token Number',
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.md),
+            const BilingualLabel(
+              englishText: 'APPOINTMENT CONFIRMED',
+              urduText: 'وقت مقرر ہو گیا',
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text('Your Token Number', style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(height: AppSpacing.sm),
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.md),
               decoration: BoxDecoration(
-                color: const Color(0xFF1A5C2A),
-                borderRadius: BorderRadius.circular(12),
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 token,
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w900,
-                  color: Colors.white,
+                  color: AppColors.onPrimary,
                   letterSpacing: 2,
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Text(
               '$_selectedCenter\n${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year} at $_selectedTime',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
@@ -155,16 +157,11 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1A5C2A),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-              ),
               onPressed: () {
                 Navigator.pop(ctx);
                 Navigator.pop(context);
               },
-              child: const Text('Done', style: TextStyle(color: Colors.white)),
+              child: const Text('DONE'),
             ),
           ),
         ],
@@ -175,143 +172,106 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         title: const Text('Book Appointment'),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF1A5C2A),
-        elevation: 0.5,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.edgeMargin),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+          child: CertificateCard(
+            hasGuilloche: false,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const BilingualLabel(
+                  englishText: 'APPOINTMENT DETAILS',
+                  urduText: 'تفصیلات',
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Appointment Details',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF1B2A4A))),
-                    const SizedBox(height: 20),
+                const Divider(color: AppColors.tertiary),
+                const SizedBox(height: AppSpacing.md),
 
-                    // Service Center Dropdown
-                    DropdownButtonFormField<String>(
-                      value: _selectedCenter,
-                      decoration: const InputDecoration(
-                        labelText: 'Service Center',
-                        prefixIcon: Icon(Icons.location_on_rounded),
-                      ),
-                      items: _centers
-                          .map((c) =>
-                              DropdownMenuItem(value: c, child: Text(c)))
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) setState(() => _selectedCenter = v);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Tehsil Dropdown
-                    DropdownButtonFormField<String>(
-                      value: _selectedTehsil,
-                      decoration: const InputDecoration(
-                        labelText: 'Tehsil',
-                        prefixIcon: Icon(Icons.map_rounded),
-                      ),
-                      items: _tehsils
-                          .map((t) =>
-                              DropdownMenuItem(value: t, child: Text(t)))
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) setState(() => _selectedTehsil = v);
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Reason
-                    TextFormField(
-                      controller: _reasonController,
-                      maxLines: 2,
-                      decoration: const InputDecoration(
-                        labelText: 'Reason for Visit',
-                        prefixIcon: Icon(Icons.description_rounded),
-                        alignLabelWithHint: true,
-                      ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Reason is required' : null,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Date Picker
-                    GestureDetector(
-                      onTap: _pickDate,
-                      child: InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: 'Appointment Date',
-                          prefixIcon: Icon(Icons.calendar_today_rounded),
-                        ),
-                        child: Text(
-                          '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
-                          style: const TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Time Slot
-                    DropdownButtonFormField<String>(
-                      value: _selectedTime,
-                      decoration: const InputDecoration(
-                        labelText: 'Time Slot',
-                        prefixIcon: Icon(Icons.access_time_rounded),
-                      ),
-                      items: _timeSlots
-                          .map((t) =>
-                              DropdownMenuItem(value: t, child: Text(t)))
-                          .toList(),
-                      onChanged: (v) {
-                        if (v != null) setState(() => _selectedTime = v);
-                      },
-                    ),
-                  ],
+                DropdownButtonFormField<String>(
+                  value: _selectedCenter,
+                  decoration: const InputDecoration(
+                    labelText: 'Service Center',
+                    prefixIcon: Icon(Icons.location_on_outlined),
+                  ),
+                  items: _centers.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _selectedCenter = v);
+                  },
                 ),
-              ),
-              const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.md),
 
-              SizedBox(
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(
-                              strokeWidth: 2.5, color: Colors.white),
-                        )
-                      : const Text('BOOK APPOINTMENT'),
+                DropdownButtonFormField<String>(
+                  value: _selectedTehsil,
+                  decoration: const InputDecoration(
+                    labelText: 'Tehsil',
+                    prefixIcon: Icon(Icons.map_outlined),
+                  ),
+                  items: _tehsils.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _selectedTehsil = v);
+                  },
                 ),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.md),
+
+                TextFormField(
+                  controller: _reasonController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    labelText: 'Reason for Visit',
+                    prefixIcon: Icon(Icons.description_outlined),
+                    alignLabelWithHint: true,
+                  ),
+                  validator: (v) => (v == null || v.isEmpty) ? 'Reason is required' : null,
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                GestureDetector(
+                  onTap: _pickDate,
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Appointment Date',
+                      prefixIcon: Icon(Icons.calendar_today_outlined),
+                    ),
+                    child: Text(
+                      '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                DropdownButtonFormField<String>(
+                  value: _selectedTime,
+                  decoration: const InputDecoration(
+                    labelText: 'Time Slot',
+                    prefixIcon: Icon(Icons.access_time_outlined),
+                  ),
+                  items: _timeSlots.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
+                  onChanged: (v) {
+                    if (v != null) setState(() => _selectedTime = v);
+                  },
+                ),
+                const SizedBox(height: AppSpacing.xl),
+
+                SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submit,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.onPrimary),
+                          )
+                        : const Text('BOOK APPOINTMENT'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

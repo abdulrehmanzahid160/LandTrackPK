@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LandTrackPK | Mutation Request</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#e6c364",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error-container": "#ffdad6",
+                        "secondary": "#5d5f5f",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-container": "#c9a84c",
+                        "on-surface": "#1b1b1b",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-background": "#1b1b1b",
+                        "surface": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-primary-fixed-variant": "#17512a",
+                        "secondary-fixed": "#e2e2e2",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fcf9f8",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "primary-container": "#01411c",
+                        "on-primary-fixed": "#00210b",
+                        "outline-variant": "#c0c9be",
+                        "on-secondary-container": "#616363",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#717970",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#74ae7e",
+                        "primary": "#00290f",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#eae7e7",
+                        "tertiary": "#755b00",
+                        "surface-variant": "#e5e2e1",
+                        "tertiary-fixed": "#ffe08f",
+                        "primary-fixed": "#b4f1bc",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "secondary-container": "#dfe0e0",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-tint": "#326a40",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#503d00",
+                        "inverse-primary": "#99d5a2",
+                        "on-surface-variant": "#414941",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-container": "#f0eded",
+                        "inverse-surface": "#313030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "4px",
+                        "gutter": "12px",
+                        "edge-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"],
+                        "headline-md": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .guilloche-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(1, 65, 28, 0.05) 1px, transparent 0);
+            background-size: 16px 16px;
+        }
+        .certificate-card {
+            border-left: 4px solid #755b00; /* Tertiary gold accent */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        .stamp-effect {
+            border: 2px solid currentColor;
+            transform: rotate(-5deg);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            text-transform: uppercase;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md guilloche-pattern">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-dim docked full-width top-0 border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-edge-margin py-md sticky z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="text-label-bold font-label-bold text-primary dark:text-primary-fixed">Verified Citizen</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged Pakistani man with a neat beard, wearing a formal white shalwar kameez. The lighting is soft and corporate, creating a sense of trust and official identity. The background is a blurred government office setting with neutral, high-key tones that align with a clean light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQNfMmVAr5ndSFEiq3T56UvbyR1zTU56_ImQy4GsadV2XfEmlGXEhJSvMlHiLkgnASv1gfiLOZziqynGE9IT1TfbWjpD7oPj5K9sfI7S21Khe9W75lcilXSpB-ssTtoIFf_ME5Dyu2vcgdOH7PcCXwulsVFMN07paHZhXU1U4B13AheIX50XoZCmX_mTlaA-ebNXmJ0PAqfbYENPjGZ0XMoqpiEOlpoGn64grPn-qvDWgnBcbGOBNrZi0yHmDmfLyZNyg1G_0AuPI"/>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-edge-margin pt-xl pb-32">
+<!-- Progress Stepper -->
+<div class="mb-xl">
+<div class="flex items-center justify-between w-full relative">
+<!-- Connection Line -->
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-outline-variant -translate-y-1/2 -z-10"></div>
+<div class="absolute top-1/2 left-0 w-1/4 h-0.5 bg-primary -translate-y-1/2 -z-10"></div>
+<!-- Steps -->
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold shadow-md">1</div>
+<span class="text-label-bold font-label-bold text-primary">Property</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center border border-outline-variant">2</div>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Applicants</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center border border-outline-variant">3</div>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Documents</span>
+</div>
+<div class="flex flex-col items-center gap-xs">
+<div class="w-10 h-10 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center border border-outline-variant">4</div>
+<span class="text-label-bold font-label-bold text-on-surface-variant">Review</span>
+</div>
+</div>
+</div>
+<!-- Section Header -->
+<div class="mb-xl">
+<h2 class="text-display-lg font-display-lg text-primary">Select Property for Mutation</h2>
+<p class="text-body-lg text-on-surface-variant mt-sm">Choose the verified land record you wish to transfer or mutate. Only properties with a 'Verified' status are eligible for online requests.</p>
+</div>
+<!-- Property List (Bento-style Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<!-- Property Card 1 (Selected State) -->
+<label class="relative cursor-pointer">
+<input checked="" class="peer sr-only" name="property_selection" type="radio"/>
+<div class="certificate-card h-full bg-surface-container-lowest p-md rounded-lg border border-outline-variant transition-all peer-checked:ring-2 peer-checked:ring-primary peer-checked:bg-primary-container/[0.03]">
+<div class="flex justify-between items-start mb-md">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Khewat No. 442 / Khatoni 89</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Agricultural Estate Alpha</h3>
+</div>
+<div class="stamp-effect text-tertiary border-tertiary rounded-sm font-bold text-[10px] tracking-tighter">
+                            VERIFIED
+                        </div>
+</div>
+<div class="space-y-sm mb-lg">
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Area Size</span>
+<span class="text-body-md font-bold text-on-surface">04 Kanal, 12 Marla</span>
+</div>
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Tehsil / District</span>
+<span class="text-body-md font-bold text-on-surface">Rawalpindi Central</span>
+</div>
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Share Holder</span>
+<span class="text-body-md font-bold text-on-surface">Sole Proprietor (1/1)</span>
+</div>
+</div>
+<div class="aspect-video w-full rounded-md overflow-hidden bg-surface-container-high relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="An expansive aerial view of a lush green agricultural field in rural Pakistan during the golden hour. The landscape is divided into neat geometric rectangular plots, reflecting traditional land division. The lighting is warm and serene, emphasizing a sense of value and permanence in land ownership, consistent with high-end institutional UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6y-_tm0tVv_ylpHkMGFQYq5bSBBQlux8HKOEcBhuCKENJZdHs8YO5HKdroKJnCFMwJAARUlmdm2SGfqzcsnXxo46mQwJp325sqZB6dC56j0Au3wmaMC6Jv6qAsyMu_jCCjOQ39zkDUZCnJ8W0BKvvBewae8pgfxrdgsvJOlq1FL3SHGBlKQkg73RzyDczHKu-xBYdrD8zsewqJkoawXpCyN2-_qcO38QCnW7cK6gzVWEPeAANAKoGxW6CKUHMESFmAT8qCXwGoZQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+<div class="absolute bottom-2 left-2 flex items-center gap-xs text-white">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="text-label-sm font-label-sm">Moza Hayatpur</span>
+</div>
+</div>
+<div class="mt-md flex justify-end">
+<div class="w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center peer-checked:bg-primary peer-checked:border-primary">
+<span class="material-symbols-outlined text-white text-[16px]">check</span>
+</div>
+</div>
+</div>
+</label>
+<!-- Property Card 2 -->
+<label class="relative cursor-pointer">
+<input class="peer sr-only" name="property_selection" type="radio"/>
+<div class="certificate-card h-full bg-surface-container-lowest p-md rounded-lg border border-outline-variant transition-all hover:bg-surface-container-low peer-checked:ring-2 peer-checked:ring-primary peer-checked:bg-primary-container/[0.03]">
+<div class="flex justify-between items-start mb-md">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Khasra No. 1102 / Plot 14</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Urban Residential Sector G</h3>
+</div>
+<div class="stamp-effect text-tertiary border-tertiary rounded-sm font-bold text-[10px] tracking-tighter">
+                            VERIFIED
+                        </div>
+</div>
+<div class="space-y-sm mb-lg">
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Area Size</span>
+<span class="text-body-md font-bold text-on-surface">10 Marla</span>
+</div>
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Tehsil / District</span>
+<span class="text-body-md font-bold text-on-surface">Islamabad ICT</span>
+</div>
+<div class="flex justify-between">
+<span class="text-body-md text-on-surface-variant">Share Holder</span>
+<span class="text-body-md font-bold text-on-surface">Joint (1/2)</span>
+</div>
+</div>
+<div class="aspect-video w-full rounded-md overflow-hidden bg-surface-container-high relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="A clean, modern suburban residential area with well-paved roads and contemporary Pakistani architecture. The scene is captured under a clear blue sky with bright, natural lighting. The composition is structured and architectural, conveying a sense of urban development and secure real estate investment, using a palette that complements a sovereign and transparent digital experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBK7sNx3NbiOU8hDv5xt_mUOou4lNmjDybI2SX3sq5X6bv7KRqLQNGYHIWHOQTU9rbqOR8Be7x152gO9BwI8epVBhyQUOFPThZpOG61hLNi5jchD5w3DoFoDeHb0MXp1Z8WIZHU-tSpJo1_PKR3GlRSbwRBSrvuV6q2sh-rFO-EqUGIaEApnX-Hjh3Q6AqBAf6CgLJ7I2XMYlfL57Ix3Ki0WJJgQpsWMwO1I5pnKJaxfkJnkleY1BQRzSBg1F27QBNn37UQb5Ic8fM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent"></div>
+<div class="absolute bottom-2 left-2 flex items-center gap-xs text-white">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="text-label-sm font-label-sm">Sector G-13</span>
+</div>
+</div>
+<div class="mt-md flex justify-end">
+<div class="w-6 h-6 rounded-full border-2 border-outline flex items-center justify-center">
+<span class="material-symbols-outlined text-transparent text-[16px]">check</span>
+</div>
+</div>
+</div>
+</label>
+<!-- Disputed/Locked Card (Non-selectable) -->
+<div class="h-full bg-surface-container p-md rounded-lg border border-outline-variant opacity-60 grayscale cursor-not-allowed">
+<div class="flex justify-between items-start mb-md">
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">Khewat No. 201</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Commercial Plaza Site</h3>
+</div>
+<div class="stamp-effect text-error border-error rounded-sm font-bold text-[10px] tracking-tighter">
+                        DISPUTED
+                    </div>
+</div>
+<div class="flex items-center gap-sm bg-error-container p-sm rounded-sm mb-md">
+<span class="material-symbols-outlined text-error text-[18px]">warning</span>
+<p class="text-label-sm text-on-error-container">Online mutation is locked due to pending litigation (Case #882).</p>
+</div>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<button class="text-primary font-bold text-label-bold flex items-center gap-xs">
+                        View Case History
+                        <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Manual Add Card -->
+<div class="h-full bg-surface-container-lowest p-md rounded-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center text-center gap-md hover:border-primary hover:bg-surface-container-low transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">add_business</span>
+</div>
+<div>
+<h4 class="text-body-lg font-bold text-on-surface">Property missing?</h4>
+<p class="text-body-md text-on-surface-variant">Add a verified property using your unique PLR ID or Registry number.</p>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant p-md z-40 md:static md:mt-xl md:bg-transparent md:border-t-0 md:p-0">
+<div class="max-w-4xl mx-auto flex items-center justify-between">
+<button class="px-lg py-sm border border-primary text-primary font-bold rounded-sm hover:bg-surface-container-low transition-colors">
+                    Save Draft
+                </button>
+<div class="flex items-center gap-md">
+<button class="px-lg py-sm text-on-surface-variant font-bold hover:underline">Cancel</button>
+<button class="px-xl py-sm bg-primary text-on-primary font-bold rounded-sm shadow-md hover:bg-primary-container transition-all flex items-center gap-sm">
+                        Continue to Applicants
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Hidden on desktop as per Shell Layout instructions) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe border-t border-outline-variant dark:border-outline bg-surface dark:bg-surface-container-low shadow-lg rounded-t-full">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-sm font-label-sm">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="text-label-sm font-label-sm">Map</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold border-b-2 border-tertiary-fixed pb-1 scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-label-sm font-label-sm">Verify</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for card selection
+        document.querySelectorAll('input[name="property_selection"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                // Visual feedback is handled by tailwind peer-* classes
+                // Adding a small haptic-like animation via JS
+                if(e.target.checked) {
+                    const card = e.target.closest('.certificate-card');
+                    card.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        card.style.transform = 'scale(1)';
+                    }, 150);
+                }
+            });
+        });
+    </script>
+</body></html>

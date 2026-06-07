@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LandTrackPK - Mutation Request</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&amp;family=Source+Serif+4:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#e6c364",
+                        "on-tertiary": "#ffffff",
+                        "inverse-on-surface": "#f3f0ef",
+                        "error-container": "#ffdad6",
+                        "secondary": "#5d5f5f",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f6f3f2",
+                        "tertiary-container": "#c9a84c",
+                        "on-surface": "#1b1b1b",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-background": "#1b1b1b",
+                        "surface": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "on-primary-fixed-variant": "#17512a",
+                        "secondary-fixed": "#e2e2e2",
+                        "error": "#ba1a1a",
+                        "surface-bright": "#fcf9f8",
+                        "background": "#fcf9f8",
+                        "surface-container-highest": "#e5e2e1",
+                        "surface-dim": "#dcd9d9",
+                        "primary-container": "#01411c",
+                        "on-primary-fixed": "#00210b",
+                        "outline-variant": "#c0c9be",
+                        "on-secondary-container": "#616363",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#717970",
+                        "on-primary": "#ffffff",
+                        "on-primary-container": "#74ae7e",
+                        "primary": "#00290f",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#eae7e7",
+                        "tertiary": "#755b00",
+                        "surface-variant": "#e5e2e1",
+                        "tertiary-fixed": "#ffe08f",
+                        "primary-fixed": "#b4f1bc",
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "secondary-container": "#dfe0e0",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-tint": "#326a40",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#503d00",
+                        "inverse-primary": "#99d5a2",
+                        "on-surface-variant": "#414941",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-container": "#f0eded",
+                        "inverse-surface": "#313030"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "4px",
+                        "gutter": "12px",
+                        "edge-margin": "20px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"],
+                        "headline-md": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .urdu-text {
+            direction: rtl;
+            font-family: 'Public Sans', sans-serif; /* Simplified for Urdu in this demo */
+        }
+        .document-pattern {
+            background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .guilloche-bg {
+            background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+            opacity: 0.03;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low text-on-surface font-body-md selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Top Navigation Bar -->
+<header class="bg-surface dark:bg-surface-dim border-b border-outline-variant dark:border-outline flex justify-between items-center w-full px-edge-margin py-md sticky top-0 z-50">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" data-icon="account_balance">account_balance</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="text-label-bold font-label-bold text-primary dark:text-primary-fixed px-3 py-1 bg-primary-fixed rounded-full">Verified Citizen</span>
+</div>
+</header>
+<main class="min-h-screen pb-32">
+<!-- Progress Stepper -->
+<section class="max-w-4xl mx-auto px-edge-margin py-xl">
+<div class="relative flex justify-between items-center mb-12">
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-outline-variant -translate-y-1/2 -z-10"></div>
+<div class="absolute top-1/2 left-0 h-0.5 bg-primary -translate-y-1/2 -z-10 transition-all duration-500" style="width: 33.33%;"></div>
+<!-- Step 1: Selection -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-bold shadow-md">
+<span class="material-symbols-outlined" data-icon="check">check</span>
+</div>
+<span class="mt-2 text-label-bold font-label-bold text-primary">Land Selection</span>
+</div>
+<!-- Step 2: Applicants (Active) -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-bold ring-4 ring-primary-fixed shadow-lg">
+                        2
+                    </div>
+<span class="mt-2 text-label-bold font-label-bold text-primary">Applicants</span>
+</div>
+<!-- Step 3: Documents -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold text-label-bold">
+                        3
+                    </div>
+<span class="mt-2 text-label-bold font-label-bold text-on-surface-variant">Documents</span>
+</div>
+<!-- Step 4: Confirmation -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold text-label-bold">
+                        4
+                    </div>
+<span class="mt-2 text-label-bold font-label-bold text-on-surface-variant">Review</span>
+</div>
+</div>
+<!-- Page Header -->
+<div class="mb-xl text-center md:text-left">
+<h2 class="text-display-lg font-display-lg text-primary mb-xs">Applicant Information</h2>
+<div class="flex items-center gap-2 md:justify-start justify-center">
+<span class="text-on-surface-variant italic">Enter details for property transfer</span>
+<span class="text-primary font-bold">/</span>
+<span class="text-on-surface-variant urdu-text text-lg">درخواست دہندہ کی تفصیلات درج کریں</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Main Form Column -->
+<form class="lg:col-span-8 space-y-xl">
+<!-- Transferor (Seller) Section -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm relative">
+<div class="absolute inset-0 guilloche-bg pointer-events-none"></div>
+<div class="bg-primary-container text-on-primary-fixed-variant px-lg py-md flex justify-between items-center border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined" data-icon="person_remove">person_remove</span>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-primary">Transferor (Seller)</h3>
+<p class="text-label-sm font-label-sm text-on-primary-container urdu-text">منتقلی کنندہ (بائع)</p>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-3 py-1 text-label-bold font-label-bold rounded-sm border border-tertiary">OFFICIAL USE</span>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Full Name (English)</span>
+<span class="urdu-text">مکمل نام (انگریزی)</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0 transition-colors" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Full Name (Urdu)</span>
+<span class="urdu-text">مکمل نام (اردو)</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0 urdu-text text-right" placeholder="نام درج کریں" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>CNIC Number</span>
+<span class="urdu-text">شناختی کارڈ نمبر</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0" placeholder="00000-0000000-0" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Phone Number</span>
+<span class="urdu-text">فون نمبر</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0" placeholder="03XX-XXXXXXX" type="tel"/>
+</div>
+</div>
+</div>
+<!-- Transferee (Buyer) Section -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-sm relative">
+<div class="absolute inset-0 guilloche-bg pointer-events-none"></div>
+<div class="bg-primary text-on-primary px-lg py-md flex justify-between items-center border-b border-outline-variant">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<div>
+<h3 class="text-headline-sm font-headline-sm">Transferee (Buyer)</h3>
+<p class="text-label-sm font-label-sm text-primary-fixed-dim urdu-text">منتقل الیہ (مشتری)</p>
+</div>
+</div>
+</div>
+<div class="p-lg grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Full Name (English)</span>
+<span class="urdu-text">مکمل نام (انگریزی)</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Full Name (Urdu)</span>
+<span class="urdu-text">مکمل نام (اردو)</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0 urdu-text text-right" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>CNIC Number</span>
+<span class="urdu-text">شناختی کارڈ نمبر</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0" type="text"/>
+</div>
+<div class="space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Phone Number</span>
+<span class="urdu-text">فون نمبر</span>
+</label>
+<input class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0" type="tel"/>
+</div>
+<div class="md:col-span-2 space-y-sm">
+<label class="block text-label-bold font-label-bold text-on-surface flex justify-between">
+<span>Permanent Address</span>
+<span class="urdu-text">مستقل پتہ</span>
+</label>
+<textarea class="w-full border-b border-outline focus:border-primary focus:ring-0 bg-transparent py-2 px-0 resize-none" rows="2"></textarea>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-md pt-lg">
+<button class="flex-1 py-4 px-lg border border-primary text-primary font-bold text-label-bold rounded-lg hover:bg-surface-container-high transition-colors flex items-center justify-center gap-md" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+<span>BACK / واپس</span>
+</button>
+<button class="flex-1 py-4 px-lg bg-primary text-on-primary font-bold text-label-bold rounded-lg hover:bg-primary-container transition-all shadow-md flex items-center justify-center gap-md" type="submit">
+<span>SAVE &amp; NEXT / محفوظ کریں</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Sidebar / Summary Column -->
+<aside class="lg:col-span-4 space-y-lg">
+<!-- Certificate Preview Card -->
+<div class="bg-surface border border-outline-variant rounded-xl overflow-hidden shadow-lg sticky top-32">
+<div class="h-2 bg-tertiary-fixed"></div>
+<div class="p-lg relative">
+<div class="absolute inset-0 document-pattern opacity-10 pointer-events-none"></div>
+<div class="flex flex-col items-center mb-md border-b border-outline-variant pb-md">
+<span class="material-symbols-outlined text-4xl text-primary mb-2" data-icon="verified">verified</span>
+<h4 class="text-headline-sm font-headline-sm text-center">Land Record Info</h4>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Selected Plot #42-B</span>
+</div>
+<ul class="space-y-md mb-lg">
+<li class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">District:</span>
+<span class="font-bold">Lahore</span>
+</li>
+<li class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Tehsil:</span>
+<span class="font-bold">Model Town</span>
+</li>
+<li class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Mauza:</span>
+<span class="font-bold">Gulberg III</span>
+</li>
+<li class="flex justify-between items-center text-body-md">
+<span class="text-on-surface-variant">Khewat:</span>
+<span class="font-bold">1204</span>
+</li>
+</ul>
+<div class="bg-surface-container-low p-md rounded-lg border border-outline-variant">
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-tertiary" data-icon="info">info</span>
+<div>
+<p class="text-label-bold font-label-bold">Required Documents Next:</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Please keep scanned CNICs and original Sale Deed ready for Step 3.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Seal Stamp Style Component -->
+<div class="flex justify-center py-md opacity-20 rotate-12 select-none grayscale pointer-events-none">
+<div class="border-4 border-dashed border-primary rounded-full w-32 h-32 flex flex-col items-center justify-center p-2">
+<span class="text-[10px] font-bold tracking-widest text-primary uppercase">Revenue Dept</span>
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="policy">policy</span>
+<span class="text-[8px] font-bold text-primary urdu-text">حکومت پنجاب</span>
+</div>
+</div>
+</aside>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface dark:bg-surface-container-low border-t border-outline-variant dark:border-outline shadow-lg md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="text-label-sm font-label-sm">Records</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="text-label-sm font-label-sm">Map</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold border-b-2 border-tertiary-fixed pb-1 active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<span class="text-label-sm font-label-sm">Verify</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-sm font-label-sm">Profile</span>
+</button>
+</nav>
+<!-- Desktop Navigation Elements (visible on large screens only) -->
+<div class="hidden md:block fixed bottom-lg right-lg z-50">
+<button class="bg-primary-container text-on-primary-fixed-variant p-md rounded-full shadow-2xl flex items-center gap-md hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" data-icon="help_center">help_center</span>
+<span class="text-label-bold font-label-bold">Need Help?</span>
+</button>
+</div>
+</body></html>

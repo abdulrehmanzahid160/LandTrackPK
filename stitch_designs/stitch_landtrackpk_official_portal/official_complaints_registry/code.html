@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Complaints - LandTrackPK</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&amp;family=Public+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#c6c6c7",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#c9a84c",
+                        "secondary-container": "#dfe0e0",
+                        "inverse-on-surface": "#f3f0ef",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary": "#755b00",
+                        "surface-container-highest": "#e5e2e1",
+                        "on-secondary-container": "#616363",
+                        "on-secondary-fixed-variant": "#454747",
+                        "surface-variant": "#e5e2e1",
+                        "secondary-fixed": "#e2e2e2",
+                        "on-error-container": "#93000a",
+                        "primary-container": "#01411c",
+                        "surface-dim": "#dcd9d9",
+                        "on-secondary-fixed": "#1a1c1c",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1b1b1b",
+                        "on-primary-fixed-variant": "#17512a",
+                        "surface-bright": "#fcf9f8",
+                        "tertiary-fixed": "#ffe08f",
+                        "surface-container-high": "#eae7e7",
+                        "on-tertiary-container": "#503d00",
+                        "primary-fixed-dim": "#99d5a2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#f0eded",
+                        "outline": "#717970",
+                        "error": "#ba1a1a",
+                        "outline-variant": "#c0c9be",
+                        "background": "#fcf9f8",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "surface-tint": "#326a40",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary-container": "#74ae7e",
+                        "on-error": "#ffffff",
+                        "inverse-primary": "#99d5a2",
+                        "secondary": "#5d5f5f",
+                        "inverse-surface": "#313030",
+                        "tertiary-fixed-dim": "#e6c364",
+                        "surface": "#fcf9f8",
+                        "primary-fixed": "#b4f1bc",
+                        "primary": "#00290f",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#414941",
+                        "surface-container-low": "#f6f3f2",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "edge-margin": "20px",
+                        "base": "4px",
+                        "md": "16px",
+                        "sm": "8px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Source Serif 4"],
+                        "label-bold": ["Public Sans"],
+                        "headline-sm": ["Source Serif 4"],
+                        "body-md": ["Public Sans"],
+                        "body-lg": ["Public Sans"],
+                        "label-sm": ["Public Sans"],
+                        "display-lg": ["Source Serif 4"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-bold": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "display-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .watermark-pattern {
+            background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+            opacity: 0.03;
+        }
+        .stagger-item {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .stamp-seal {
+            border: 2px solid currentColor;
+            padding: 2px 8px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 4px;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+        .guilloche-border {
+            border: 1px solid #E0E0E0;
+            position: relative;
+        }
+        .guilloche-border::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background-color: #c9a84c; /* Gold accent */
+        }
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            direction: rtl;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen relative overflow-x-hidden">
+<!-- Watermark Layer -->
+<div class="fixed inset-0 pointer-events-none watermark-pattern z-0"></div>
+<div class="fixed inset-0 pointer-events-none opacity-[0.02] flex items-center justify-center z-0">
+<span class="material-symbols-outlined text-[400px]">account_balance</span>
+</div>
+<!-- Top App Bar -->
+<header class="bg-surface border-b border-outline-variant fixed top-0 w-full z-50 h-16 flex justify-between items-center px-edge-margin">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-headline-md">account_balance</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">LandTrackPK</h1>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<span class="material-symbols-outlined text-primary" data-weight="fill">verified</span>
+</div>
+</header>
+<main class="relative z-10 pt-20 pb-24 px-edge-margin max-w-2xl mx-auto">
+<!-- Header Section -->
+<div class="mb-xl stagger-item" style="animation-delay: 0.1s;">
+<div class="flex justify-between items-end mb-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Official Complaints</h2>
+<span class="text-label-sm text-on-surface-variant uppercase tracking-wider">Public Grievance Redressal</span>
+</div>
+<div class="h-[2px] w-full bg-outline-variant mb-md">
+<div class="h-full bg-primary-container w-1/3"></div>
+</div>
+<p class="font-body-md text-on-surface-variant leading-relaxed">
+                Track the status of your formal land revenue complaints and legal appeals. All records are cryptographically verified by the Land Revenue Department.
+            </p>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-sm mb-lg overflow-x-auto pb-xs stagger-item" style="animation-delay: 0.2s;">
+<button class="bg-primary-container text-on-primary px-md py-xs rounded-full font-label-bold text-label-sm whitespace-nowrap">All Records</button>
+<button class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-bold text-label-sm whitespace-nowrap">Active Appeals</button>
+<button class="bg-surface-container-high text-on-surface-variant px-md py-xs rounded-full font-label-bold text-label-sm whitespace-nowrap">Resolved</button>
+</div>
+<!-- Complaint List -->
+<div class="space-y-md">
+<!-- Complaint Card 1: Pending -->
+<div class="guilloche-border bg-surface-container-lowest p-md shadow-sm rounded-lg stagger-item" style="animation-delay: 0.3s;">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-label-sm text-on-surface-variant block uppercase font-bold tracking-tighter">Case Number</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">LRP-2024-9921</h3>
+</div>
+<div class="stamp-seal text-tertiary border-tertiary">
+<span class="text-[10px] leading-none">PENDING</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md mb-md">
+<div>
+<span class="text-label-sm text-on-surface-variant block">Filing Date</span>
+<span class="font-label-bold text-on-surface">Oct 24, 2023</span>
+</div>
+<div>
+<span class="text-label-sm text-on-surface-variant block">Subject</span>
+<span class="font-label-bold text-on-surface">Title Rectification</span>
+</div>
+</div>
+<div class="bg-surface-container p-sm rounded border border-outline-variant mb-md">
+<p class="font-body-md text-on-surface italic">"The applicant requests the correction of paternal names in the central registry for Mauza Sheikhupura."</p>
+<p class="text-[12px] text-on-surface-variant mt-xs urdu-text text-right">درخواست گزار نے موضع شیخوپورہ کے مرکزی رجسٹری میں ولدیت کی درستگی کی درخواست کی ہے۔</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-label-sm flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">history</span>
+                        Last update: 2 days ago
+                    </span>
+<button class="text-primary font-label-bold text-label-sm flex items-center gap-xs">
+                        VIEW DETAILS <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Complaint Card 2: Resolved -->
+<div class="guilloche-border bg-surface-container-lowest p-md shadow-sm rounded-lg stagger-item" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-label-sm text-on-surface-variant block uppercase font-bold tracking-tighter">Case Number</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">LRP-2023-8812</h3>
+</div>
+<div class="stamp-seal text-primary-container border-primary-container">
+<span class="text-[10px] leading-none">RESOLVED</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md mb-md">
+<div>
+<span class="text-label-sm text-on-surface-variant block">Filing Date</span>
+<span class="font-label-bold text-on-surface">Aug 12, 2023</span>
+</div>
+<div>
+<span class="text-label-sm text-on-surface-variant block">Subject</span>
+<span class="font-label-bold text-on-surface">Boundary Dispute</span>
+</div>
+</div>
+<div class="flex items-center gap-sm bg-primary-fixed text-on-primary-fixed p-sm rounded mb-md border border-on-primary-fixed-variant/20">
+<span class="material-symbols-outlined" data-weight="fill">verified</span>
+<span class="font-label-bold text-label-sm">Digital Certificate Issued - Success</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-label-sm flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">task_alt</span>
+                        Closed on: Sep 15, 2023
+                    </span>
+<button class="text-primary font-label-bold text-label-sm flex items-center gap-xs">
+                        DOWNLOAD ORDER <span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+</div>
+<!-- Complaint Card 3: Rejected -->
+<div class="guilloche-border bg-surface-container-lowest p-md shadow-sm rounded-lg stagger-item" style="animation-delay: 0.5s;">
+<div class="flex justify-between items-start mb-sm">
+<div>
+<span class="text-label-sm text-on-surface-variant block uppercase font-bold tracking-tighter">Case Number</span>
+<h3 class="font-headline-sm text-headline-sm text-primary">LRP-2023-7701</h3>
+</div>
+<div class="stamp-seal text-error border-error">
+<span class="text-[10px] leading-none">REJECTED</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md mb-md">
+<div>
+<span class="text-label-sm text-on-surface-variant block">Filing Date</span>
+<span class="font-label-bold text-on-surface">Jan 05, 2023</span>
+</div>
+<div>
+<span class="text-label-sm text-on-surface-variant block">Subject</span>
+<span class="font-label-bold text-on-surface">Succession Claim</span>
+</div>
+</div>
+<div class="border-l-4 border-error bg-error-container/20 p-sm mb-md">
+<span class="text-label-sm font-bold text-error block mb-xs">Incomplete Documentation</span>
+<p class="font-body-md text-on-surface">The claim was dismissed due to failure to provide the official inheritance certificate (Wirasat-Nama).</p>
+<p class="text-[12px] text-on-surface-variant mt-xs urdu-text text-right">سرکاری وراثت نامہ فراہم نہ کرنے کی وجہ سے دعویٰ خارج کر دیا گیا۔</p>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-label-sm flex items-center gap-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+                        Final Decision
+                    </span>
+<button class="text-error font-label-bold text-label-sm flex items-center gap-xs">
+                        RE-FILE CLAIM <span class="material-symbols-outlined text-[16px]">refresh</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Document Graphic -->
+<div class="mt-xl p-lg bg-surface-container-high rounded-xl border border-outline-variant text-center stagger-item" style="animation-delay: 0.6s;">
+<img alt="Legal Documents" class="w-24 h-24 mx-auto mb-md rounded-full object-cover border-4 border-surface" data-alt="A macro photograph of an official government document with a green wax seal and a golden emblem. The lighting is soft and professional, highlighting the texture of high-quality parchment paper. The aesthetic is sovereign and secure, representing the Land Revenue Department of Pakistan with a focus on institutional authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfZn_uDRvHaDc9wDoUEA3naWCfgFF596N4wLv42i9inX5Ol_BailyBY5_o0p1WZk0eegiSbQCN4UDUoOLgvbyuBkwt6JnbAF_qrX-3IeCPuwQXEVwRJiABnLeQg6DSLgnsffaN3DqVU-xG-Kj9t54K_OeWPiuSspwCpKK5byJvglIeC3N_QjHmOCrCTBGLDUfWgnh81T2dHpke1iXXF2cWP3LX0P0rhQlIxwCp7oZjJIEH4dVL1l8DJ2_ONXbKDVVo3Jq03QCoaPI"/>
+<h4 class="font-headline-sm text-headline-sm text-primary mb-xs">Legal Assistance</h4>
+<p class="font-body-md text-on-surface-variant mb-md">Need help drafting a new formal appeal? Our digital advocates are available 24/7.</p>
+<button class="w-full bg-primary-container text-on-primary py-md rounded-lg font-label-bold text-label-sm uppercase tracking-widest shadow-lg active:scale-95 transition-transform">
+                Start New Complaint
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container shadow-md border-t border-outline-variant flex justify-around items-center px-lg py-sm pb-safe rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-sm text-label-sm">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">map</span>
+<span class="font-label-sm text-label-sm">Map</span>
+</a>
+<div class="flex flex-col items-center justify-center text-primary font-bold relative after:content-[''] after:w-1 after:h-1 after:bg-tertiary-container after:rounded-full after:mt-1">
+<span class="material-symbols-outlined" data-weight="fill">verified_user</span>
+<span class="font-label-sm text-label-sm">Verify</span>
+</div>
+<a class="flex flex-col items-center justify-center text-on-secondary-container hover:bg-secondary-container transition-transform duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-label-sm">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button (Optional Contextual) -->
+<button class="fixed bottom-24 right-edge-margin w-14 h-14 bg-tertiary-container text-on-tertiary-container rounded-full shadow-xl flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-[28px]">add_comment</span>
+</button>
+<script>
+        // Micro-interactions for card hover
+        document.querySelectorAll('.guilloche-border').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-md');
+                card.style.transform = 'translateY(-2px)';
+                card.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-md');
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Initialize animation triggers if list items were dynamic
+        // Currently handled by CSS @keyframes on stagger-item class
+    </script>
+</body></html>

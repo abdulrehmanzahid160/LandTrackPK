@@ -71,3 +71,42 @@ def add_citizen():
 
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
+@auth_bp.route('/citizens', methods=['GET'])
+def get_citizens():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT CitizenID, FullName, CNIC, Role FROM Citizens ORDER BY FullName")
+        rows = cursor.fetchall()
+        conn.close()
+
+        citizens = []
+        for r in rows:
+            citizens.append({
+                'citizen_id': r.CitizenID,
+                'full_name': r.FullName,
+                'cnic': r.CNIC,
+                'role': r.Role
+            })
+        return jsonify(citizens)
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@auth_bp.route('/citizen/<int:citizen_id>', methods=['DELETE'])
+def delete_citizen(citizen_id):
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        
+        # Delete related phone numbers first
+        cursor.execute("DELETE FROM CitizenPhones WHERE CitizenID = ?", (citizen_id,))
+        # Then delete the citizen
+        cursor.execute("DELETE FROM Citizens WHERE CitizenID = ?", (citizen_id,))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'User deleted successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500

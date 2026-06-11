@@ -6,7 +6,7 @@
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-const String _mobileBaseUrl = 'http://192.168.0.118:5000/api';
+const String _mobileBaseUrl = 'http://10.4.43.189:5000/api';
 const String _webBaseUrl    = 'http://localhost:5000/api';
 
 final String baseUrl = kIsWeb ? _webBaseUrl : _mobileBaseUrl;

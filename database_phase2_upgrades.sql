@@ -1,7 +1,6 @@
 USE LandTrackPK;
 GO
 
--- Create Appointments Table
 IF OBJECT_ID('Appointments', 'U') IS NULL
 BEGIN
     CREATE TABLE Appointments (
@@ -13,12 +12,11 @@ BEGIN
         AppointmentDate DATE NOT NULL,
         AppointmentTime VARCHAR(20) NOT NULL,
         TokenNumber     VARCHAR(20) NOT NULL,
-        Status          VARCHAR(20) NOT NULL DEFAULT 'Scheduled' -- Scheduled, Completed, Cancelled
+        Status          VARCHAR(20) NOT NULL DEFAULT 'Scheduled'
     );
 END
 GO
 
--- Create Complaints Table
 IF OBJECT_ID('Complaints', 'U') IS NULL
 BEGIN
     CREATE TABLE Complaints (
@@ -26,14 +24,13 @@ BEGIN
         CitizenID       INT NOT NULL FOREIGN KEY REFERENCES Citizens(CitizenID) ON DELETE CASCADE,
         ComplaintType   NVARCHAR(100) NOT NULL,
         Details         NVARCHAR(500) NOT NULL,
-        Status          VARCHAR(20) NOT NULL DEFAULT 'Open', -- Open, InProgress, Resolved
+        Status          VARCHAR(20) NOT NULL DEFAULT 'Open',
         SubmittedDate   DATETIME NOT NULL DEFAULT GETDATE(),
         AttachmentPath  NVARCHAR(255) NULL
     );
 END
 GO
 
--- Create ComplaintComments Table
 IF OBJECT_ID('ComplaintComments', 'U') IS NULL
 BEGIN
     CREATE TABLE ComplaintComments (
@@ -47,7 +44,6 @@ BEGIN
 END
 GO
 
--- Insert sample service history / appointments matching screenshot data for Muhammad Tariq (CitizenID = 2)
 DELETE FROM Appointments;
 INSERT INTO Appointments (CitizenID, ServiceCenter, Tehsil, Reason, AppointmentDate, AppointmentTime, TokenNumber, Status)
 VALUES
@@ -55,7 +51,6 @@ VALUES
 (2, 'DMM Nankana Sahib', 'Nankana Sahib', 'Copy (Personal Record, 17889682)', '2022-09-29', '04:27 pm', '1029', 'Completed'),
 (2, 'Lahore Model Town', 'Lahore Model Town', 'General Inquiry', '2022-07-07', '04:14 pm', '57', 'Completed');
 
--- Insert sample complaint matching screenshot data for Muhammad Tariq (CitizenID = 2)
 DELETE FROM ComplaintComments;
 DELETE FROM Complaints;
 

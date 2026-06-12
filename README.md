@@ -1,6 +1,6 @@
 # 🚀 LandTrack PK
 
-**Author:** Abdul Rehman
+**Author:** Abdul Rehman,Fatima Tariq,Hafsa Khan
 
 LandTrack PK is a comprehensive land record management system designed for Pakistan.  
 It provides a secure and transparent digital platform for citizens to manage their properties and for land officers to efficiently oversee land operations.
@@ -81,6 +81,5 @@ The goal of this project is to modernize land record systems by making them:
 ---
 
 ## 👨‍💻 Author
-
-Abdul Rehman  
+ 
 Built with ❤️ using Flutter + Flask + SQL Server
